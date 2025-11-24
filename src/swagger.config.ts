@@ -12,7 +12,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
     },
     servers: [
       {
-        url: 'http://localhost:3000/api',
+        url: 'http://localhost:3000/',
       },
     ],
     // Security definition (for JWT)
@@ -28,7 +28,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
     },
   },
 
-  apis: ['./src/routes/*.ts', './src/models/*.ts'],
+  apis: ['./src/routes/*.ts', './src/models/*.ts', './src/controllers/*.ts'],
 };
 
 export const swaggerSpec = swaggerJsdoc(swaggerOptions);

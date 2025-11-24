@@ -19,4 +19,6 @@ router.get('/', (req, res) => {
   res.status(200).json('It is alive! 🧟');
 });
 
+//TODO add CRUD to users
+
 export default router;
