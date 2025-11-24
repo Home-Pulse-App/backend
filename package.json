@@ -6,7 +6,8 @@
   "scripts": {
     "test": "vitest test",
     "test:coverage": "vitest run --coverage",
-    "dev": "nodemon src/server.ts"
+    "dev": "nodemon src/server.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
