@@ -12,7 +12,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
     },
     servers: [
       {
-        url: 'http://localhost:3000/api',
+        url: 'http://localhost:3000/',
       },
     ],
     // Security definition (for JWT)

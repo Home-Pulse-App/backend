@@ -5,9 +5,6 @@ dotenv.config({path: '../.env'});
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
-  console.log(process.cwd());
-  console.log(process.env.JWT_SECRET);
-  console.log(process.env.JWT_EXPIRES_IN);
 
   // Example user from DB
   //TODO import user from DB

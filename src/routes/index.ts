@@ -9,7 +9,7 @@ import authRoutes from './auth.routes';
 const router = Router();
 
 //Auth
-router.use('/auth',authRoutes);
+router.use('/api/auth',authRoutes);
 
 // Users
 router.use('/users', usersRoutes);
