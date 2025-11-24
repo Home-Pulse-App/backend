@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest test",
+    "test:coverage": "vitest run --coverage",
     "dev": "nodemon src/server.ts"
   },
   "keywords": [],
@@ -29,8 +30,10 @@
     "@types/node": "^24.10.0",
     "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
+    "supertest": "^7.1.4",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.13"
   },
   "config": {
     "commitizen": {
