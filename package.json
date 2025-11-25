@@ -16,10 +16,12 @@
   "dependencies": {
     "@ai-sdk/google": "^2.0.38",
     "ai": "^5.0.95",
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "express-validator": "^7.3.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^9.0.0",
     "mqtt": "^5.14.1",
     "sequelize": "^6.37.7",
