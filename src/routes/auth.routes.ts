@@ -7,7 +7,7 @@ const router = Router();
 
 /**
  * @openapi
- * /api/auth/login:
+ * /auth/login:
  *    post:
  *     summary: Login user and return JWT
  *     tags:
@@ -44,7 +44,7 @@ const router = Router();
  *       401:
  *         description: Invalid credentials
  *
- * /api/auth/profile:
+ * /auth/profile:
  *   get:
  *     summary: Get authenticated user profile
  *     tags:

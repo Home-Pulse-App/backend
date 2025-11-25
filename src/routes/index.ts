@@ -1,18 +1,24 @@
 import { Router } from 'express';
 
 // import usersRoutes from './users.routes';
+import authRoutes from './auth.routes';
+import { auth } from '../middlewares/auth.middleware';
 // import homesRoutes from './homes.routes';
 // import roomsRoutes from './rooms.routes';
 // import devicesRoutes from './devices.routes';
 
 const router = Router();
 
-router.get('/', (req, res) => {
+//test is alive
+router.use('/',(req, res) => {
   res.status(200).send('It is alive! 🧟');
 });
 
+//Auth-Login
+router.use('/api/auth',authRoutes);
+
 // Users
-// router.use('/users', usersRoutes);
+// router.use('/api/users',auth, usersRoutes);
 
 // Homes
 // router.use('/homes', homesRoutes);

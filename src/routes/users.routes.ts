@@ -1,4 +1,5 @@
 // import 'dotenv/config';
+// import { Router } from 'express';
 
 // const router = Router();
 
@@ -14,8 +15,4 @@
 //  *       200:
 //  *         description: Server is running.
 //  */
-// router.get('/', (req, res) => {
-//   res.status(200).json('It is alive! 🧟');
-// });
-
 // export default router;

@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import dotenv from "dotenv";
-dotenv.config({path: '../.env'});
+// import dotenv from "dotenv";
+// dotenv.config();
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
