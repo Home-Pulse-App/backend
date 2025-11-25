@@ -1,20 +1,18 @@
 import { Router } from 'express';
 
-import usersRoutes from './users.routes';
-import authRoutes from './auth.routes';
-import { auth } from '../middlewares/auth.middleware';
+// import usersRoutes from './users.routes';
 // import homesRoutes from './homes.routes';
 // import roomsRoutes from './rooms.routes';
 // import devicesRoutes from './devices.routes';
 
 const router = Router();
 
-//Auth-Login
-router.use('/api/auth',authRoutes);
-
+router.get('/', (req, res) => {
+  res.status(200).send('It is alive! 🧟');
+});
 
 // Users
-router.use('/users',auth, usersRoutes);
+// router.use('/users', usersRoutes);
 
 // Homes
 // router.use('/homes', homesRoutes);
