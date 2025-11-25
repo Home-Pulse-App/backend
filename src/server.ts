@@ -1,15 +1,17 @@
 // backend/src/server.ts
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import router from './routes';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './swagger.config';
 import connectDB from './db';
-import 'dotenv/config';
 
 export const app = express();
 
-connectDB();
+if (process.env.NODE_ENV !== 'test') {
+  connectDB();
+}
 
 app.use(cors());
 app.use(express.json());
