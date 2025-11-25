@@ -1,5 +1,3 @@
-// // backend/src/routs/user.routes.ts
-// import { Router } from 'express';
 // import 'dotenv/config';
 
 // const router = Router();

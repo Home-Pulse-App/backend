@@ -1,4 +1,3 @@
-// backend/src/routs/index.ts
 import { Router } from 'express';
 
 // import usersRoutes from './users.routes';
