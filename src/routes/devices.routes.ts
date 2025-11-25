@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import 'dotenv/config';
-import { validateCreateDevice } from '../validators/device.validator';
-import { postDevice } from '../controllers/device.controller';
+import { validateCreateDevice, validateDeviceId } from '../validators/device.validator';
+import { getDevices, postDevice } from '../controllers/device.controller';
 
 const router = Router();
 
@@ -22,24 +22,19 @@ const router = Router();
  *           schema:
  *             type: object
  *             required:
- *               - deviceId
  *               - deviceName
  *             properties:
- *               deviceId:
+  *               deviceName:
  *                 type: string
  *                 minLength: 3
  *                 maxLength: 50
- *                 example: esp32-livingroom-01
- *                 description: Unique identifier for the device (e.g. MAC-based or custom)
- *               deviceName:
- *                 type: string
- *                 example: Living Room Sensor
- *                 description: Human-readable name
+ *                 example: iot1
+ *                 description: Unique identifier for the device (e.g. Name given by manufacter)
  *               type:
  *                 type: string
- *                 enum: [esp32]
- *                 default: esp32
- *                 description: Device type (for future expansion)
+ *                 enum: [esp32-generic | raspberry-pi]
+ *                 default: esp32-generic
+ *                 description: Device type (for now only working esp32-generic)
  *               sensors:
  *                 type: array
  *                 items:
@@ -63,7 +58,7 @@ const router = Router();
  *                     - power
  *                     - voltage
  *                     - current
- *                 example: ["temperature", "humidity", "light","switch1"]
+ *                 example: ["temperature", "humidity", "light","switch1","switch2"]
  *                 description: List of sensors this device has
  *     responses:
  *       201:
@@ -84,6 +79,7 @@ const router = Router();
  */
 
 router.post('/',validateCreateDevice,postDevice);
+router.get('/:device',validateDeviceId, getDevices);
 
 
 export default router;

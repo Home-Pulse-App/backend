@@ -1,4 +1,4 @@
-import { body, ValidationChain } from 'express-validator';
+import { body, query, ValidationChain, validationResult } from 'express-validator';
 import { SENSOR_TYPES } from '../modules/Device';
 
 export const validateCreateDevice: ValidationChain[] = [
@@ -30,4 +30,11 @@ export const validateCreateDevice: ValidationChain[] = [
     .optional({ nullable: true })
     .isMongoId()
     .withMessage('roomId must be a valid MongoDB ObjectId'),
+];
+
+export const validateDeviceId = [
+  query('device')
+      .notEmpty()
+      .trim()
+      .withMessage('Missing ingredients'),
 ];

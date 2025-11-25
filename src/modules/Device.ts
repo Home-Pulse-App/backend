@@ -1,5 +1,4 @@
 import mongoose, { Schema, model, Document } from 'mongoose';
-const AutoIncrementFactory = require('mongoose-sequence')(mongoose);
 
 export const SENSOR_TYPES = [
   'temperature',

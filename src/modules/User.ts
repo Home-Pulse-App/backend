@@ -1,15 +1,22 @@
 import { Schema, model, Document } from 'mongoose';
+import { IDevice } from './Device';
 
 export interface IUser extends Document {
+  userId:number,
   userName: string;
   email: string;
   passwordHash: string;
   homes: Schema.Types.ObjectId[];
-  devices: Schema.Types.ObjectId[];
+  devices: Array<IDevice>;
 }
 
 const userSchema = new Schema<IUser>(
   {
+    userId: {
+      type: Number,
+      required: true,
+      unique: true,
+    },
     userName: {
       type: String,
       required: true,
@@ -34,7 +41,7 @@ const userSchema = new Schema<IUser>(
     ],
     devices: [
       {
-        type: Schema.Types.ObjectId,
+        type: DEVICE_TYPES,
         ref: 'Device',
       },
     ],
