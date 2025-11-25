@@ -5,12 +5,12 @@ import authRoutes from './auth.routes';
 import { auth } from '../middlewares/auth.middleware';
 // import homesRoutes from './homes.routes';
 // import roomsRoutes from './rooms.routes';
-// import devicesRoutes from './devices.routes';
+import devicesRoutes from './devices.routes';
 
 const router = Router();
 
 //test is alive
-router.use('/',(req, res) => {
+router.get('/api',(req, res) => {
   res.status(200).send('It is alive! 🧟');
 });
 
@@ -23,10 +23,10 @@ router.use('/api/auth',authRoutes);
 // Homes
 // router.use('/homes', homesRoutes);
 
-// // Rooms
+// Rooms
 // router.use('/rooms', roomsRoutes);
 
-// // Devices
-// router.use('/devices', devicesRoutes);
+// Devices
+router.use('/api/device',auth, devicesRoutes);
 
 export default router;

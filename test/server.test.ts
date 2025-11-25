@@ -15,7 +15,7 @@ afterAll(() => {
 });
 
 test('Server connected', async ({ expect }) => {
-  const response = await request(server).get('/');
+  const response = await request(server).get('/api');
 
   expect(response.statusCode).toBe(200);
   expect(response.text).toBe('It is alive! 🧟');

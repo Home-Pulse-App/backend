@@ -5,10 +5,6 @@ const client = mqtt.connect(mqttConfig.brokerUrl, mqttConfig.options);
 
 client.on('connect', () => {
   console.log('✅ MQTT conectado a', mqttConfig.brokerUrl);
-  
-  // Suscripciones iniciales
-  client.subscribe('devices/+/status');
-  client.subscribe('comands/#');
 });
 
 client.on('error', (err) => {
