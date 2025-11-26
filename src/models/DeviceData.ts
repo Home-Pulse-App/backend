@@ -37,14 +37,19 @@ export type DataType = (typeof DATA_TYPES)[number];
 
 export interface IDeviceData extends Document {
   userId: Schema.Types.ObjectId;
-  deviceId: Number;
+  deviceId: String;
   sensorsData: DataType;
 }
 
 const deviceDataSchema = new Schema<IDeviceData>(
   {
+    userId:{
+      type: Schema.Types.ObjectId,
+      required:true,
+      trim:true
+    },
     deviceId: {
-      type: Number,
+      type: String,
       required: true,
       trim: true,
     },

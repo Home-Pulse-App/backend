@@ -2,6 +2,7 @@ import { Router } from 'express';
 import 'dotenv/config';
 import { validateCreateDevice, validateDeviceId } from '../validators/device.validator';
 import { getDevices, postDevice } from '../controllers/device.controller';
+import { auth } from '../middlewares/auth.middleware';
 
 const router = Router();
 
@@ -23,6 +24,8 @@ const router = Router();
  *             type: object
  *             required:
  *               - deviceName
+ *               - type
+ *               - sensors
  *             properties:
  *               deviceName:
  *                 type: string
@@ -76,10 +79,36 @@ const router = Router();
  *         description: Device already exists
  *       500:
  *         description: Internal server error
+ * 
+ *   get:
+ *     summary: Get devices from the user list
+ *     tags:
+ *       - Device array
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Users devices list
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: Array
+ *               properties:
+ *                 deviceName:
+ *                   type: string
+ *                 type:
+ *                   type: string
+ *                 state:
+ *                   type: string
+ *                 sensors:
+ *                   type: string
+ *       401:
+ *         description: Missing or invalid token
  */
 
 router.post('/',validateCreateDevice,postDevice);
-router.get('/:device',validateDeviceId, getDevices);
+router.get('/', auth, getDevices);
+router.get('/:device',auth,getDeviceDAta);
 
 
 export default router;

@@ -49,7 +49,7 @@ const router = Router();
  *     tags:
  *       - Auth
  *     security:
- *       - BearerAuth: []   # ✅ Requires JWT
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: User profile returned successfully

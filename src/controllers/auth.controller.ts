@@ -19,9 +19,6 @@ export const login = async (req: Request, res: Response) => {
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN }
   );
-  //get devices of the user and subscribe to them
-  const devices = user.devices;
-  subscribeToDevices(devices);
 
   res.json({ token });
 };

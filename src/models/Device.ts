@@ -45,10 +45,6 @@ export interface IDevice extends Document {
 
 const deviceSchema = new Schema<IDevice>(
   {
-    deviceId: { 
-      type: Number, 
-    },
-
     deviceName: {
       type: String,
       required: true,
