@@ -19,9 +19,11 @@ export const validateCreateDevice: ValidationChain[] = [
     .withMessage('sensors must be an array')
     .custom((arr: any[]) => {
       if (!Array.isArray(arr)) return false;
-      const invalid = arr.filter(s => !SENSOR_TYPES.includes(s as any));
+      const invalid = arr.filter((s) => !SENSOR_TYPES.includes(s as any));
       if (invalid.length > 0) {
-        throw new Error(`Invalid sensors: ${invalid.join(', ')}. Allowed: ${[...SENSOR_TYPES].join(', ')}`);
+        throw new Error(
+          `Invalid sensors: ${invalid.join(', ')}. Allowed: ${[...SENSOR_TYPES].join(', ')}`,
+        );
       }
       return true;
     }),
@@ -33,8 +35,5 @@ export const validateCreateDevice: ValidationChain[] = [
 ];
 
 export const validateDeviceId = [
-  query('device')
-      .notEmpty()
-      .trim()
-      .withMessage('Missing ingredients'),
+  query('device').notEmpty().trim().withMessage('Missing ingredients'),
 ];

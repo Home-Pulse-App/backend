@@ -1,12 +1,12 @@
 import { IDevice } from '../models/Device';
 import mqtt from './mqtt';
 
-export function subscribeToDevices (devices: Array<IDevice>) {
+export function subscribeToDevices(devices: Array<IDevice>) {
   if (devices) {
-    devices.forEach(device => {
+    devices.forEach((device) => {
       console.log(device);
       const deviceTopic = `${device.type}/${device.deviceName}/data`;
       mqtt.subscribe(deviceTopic);
-    })
+    });
   }
 }
