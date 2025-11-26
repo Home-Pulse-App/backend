@@ -7,7 +7,8 @@
     "test": "vitest test",
     "test:coverage": "vitest run --coverage",
     "dev": "nodemon src/server.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "seed": "ts-node src/seed.ts"
   },
   "keywords": [],
   "author": "",
