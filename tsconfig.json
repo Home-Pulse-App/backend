@@ -14,7 +14,7 @@
 
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
-    "sourceMap": true
+    "sourceMap": true,
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

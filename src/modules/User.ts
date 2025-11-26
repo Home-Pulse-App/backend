@@ -1,5 +1,5 @@
 import { Schema, model, Document } from 'mongoose';
-import { IDevice } from './Device';
+import { DEVICE_TYPES, IDevice } from './Device';
 
 export interface IUser extends Document {
   userId:number,
