@@ -1,10 +1,9 @@
-import { Request, Response } from "express";
-import { validationResult } from "express-validator";
-import User, { IUser } from "../models/User";
+import { Request, Response } from 'express';
+import { validationResult } from 'express-validator';
+import User, { IUser } from '../models/User';
 import bcrypt from 'bcryptjs';
 
-
-export async function createNewUser (req:Request, res:Response) {
+export async function createNewUser(req: Request, res: Response) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.status(400).json({
@@ -15,11 +14,7 @@ export async function createNewUser (req:Request, res:Response) {
     return;
   }
   try {
-    const {
-      userName,
-      email,
-      password
-    } = req.body;
+    const { userName, email, password } = req.body;
 
     const hashedPassword = await bcrypt.hash(password,14);
     
@@ -28,9 +23,9 @@ export async function createNewUser (req:Request, res:Response) {
       email: email,
       passwordHash: hashedPassword,
       homes: [],
-      devices: []
+      devices: [],
     });
-    
+
     await newUser.save();
 
     res.status(201).json({
@@ -39,7 +34,7 @@ export async function createNewUser (req:Request, res:Response) {
     });
   } catch (error: any) {
     console.error('postDevice error:', error);
-    
+
     if (error.code === 11000) {
       res.status(409).json({
         success: false,
@@ -56,12 +51,11 @@ export async function createNewUser (req:Request, res:Response) {
   }
 }
 
-export async function deleteUser (req:Request, res:Response) {
-  
+export async function deleteUser(req: Request, res: Response) {
   try {
     const userId = res.locals.userId.id;
 
-    const dbresponse = await User.deleteOne({_id: userId});
+    const dbresponse = await User.deleteOne({ _id: userId });
 
     if (dbresponse.deletedCount === 0) {
       return res.status(404).json({
@@ -77,7 +71,7 @@ export async function deleteUser (req:Request, res:Response) {
     });
   } catch (error: any) {
     console.error('postDevice error:', error);
-    
+
     if (error.code === 11000) {
       res.status(409).json({
         success: false,

@@ -1,9 +1,9 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model, Document, Types } from 'mongoose';
 
 export interface IRoom extends Document {
   roomName: string;
-  homeId: Schema.Types.ObjectId;
-  devices: Schema.Types.ObjectId[];
+  homeId: Types.ObjectId;
+  devices: Types.ObjectId[];
 }
 
 const roomSchema = new Schema<IRoom>(
