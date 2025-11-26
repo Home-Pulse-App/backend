@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { auth } from '../middlewares/auth.middleware';
-import { addRoom } from '../controllers/room.controller';
+import { addRoom, getRooms } from '../controllers/room.controller';
 
 const router = Router();
 
@@ -45,5 +45,35 @@ const router = Router();
  *         description: Interna
  */
 router.post('/homes/:homeId/rooms', auth, addRoom);
+
+/**
+ * @openapi
+ * /homes/{homeId}/rooms:
+ *   get:
+ *     summary: Get all rooms for a home
+ *     description: Returns the list of rooms belonging to a specific home.
+ *     tags:
+ *       - Rooms
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: homeId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the home
+ *     responses:
+ *       200:
+ *         description: Rooms fetched successfully
+ *       403:
+ *         description: Forbidden — user is not owner of the home
+ *       404:
+ *         description: Home not found
+ *       500:
+ *         description: Internal server error
+ */
+
+router.get('/homes/:homeId/rooms', auth, getRooms);
 
 export default router;
