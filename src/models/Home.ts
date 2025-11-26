@@ -1,9 +1,9 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model, Document, Types } from 'mongoose';
 
 export interface IHome extends Document {
   homeName: string;
-  userId: Schema.Types.ObjectId;
-  rooms: Schema.Types.ObjectId[];
+  userId: Types.ObjectId;
+  rooms: Types.ObjectId[];
 }
 
 const homeSchema = new Schema<IHome>(
