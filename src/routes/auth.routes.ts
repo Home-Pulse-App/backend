@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import 'dotenv/config';
 import { login } from '../controllers/auth.controller';
-import { auth } from '../middlewares/auth.middleware';
 
 const router = Router();
 

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-// import usersRoutes from './users.routes';
+import usersRoutes from './users.routes';
 import authRoutes from './auth.routes';
 import { auth } from '../middlewares/auth.middleware';
 // import homesRoutes from './homes.routes';
@@ -18,7 +18,7 @@ router.get('/api',(req, res) => {
 router.use('/api/auth',authRoutes);
 
 // Users
-// router.use('/api/users',auth, usersRoutes);
+router.use('/api/users', usersRoutes);
 
 // Homes
 // router.use('/homes', homesRoutes);

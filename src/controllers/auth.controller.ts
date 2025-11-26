@@ -2,8 +2,9 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import User from "../modules/User";
 import { subscribeToDevices } from "../utils/mqtt.subscribes";
+import { Request, Response } from "express";
 
-export const login = async (req, res) => {
+export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({email}).populate('devices');
@@ -19,7 +20,7 @@ export const login = async (req, res) => {
     { expiresIn: process.env.JWT_EXPIRES_IN }
   );
   //get devices of the user and subscribe to them
-  const devices = user.devices
+  const devices = user.devices;
   subscribeToDevices(devices);
 
   res.json({ token });

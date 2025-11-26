@@ -7,9 +7,9 @@ const router = Router();
 
 /**
  * @openapi
- *  /:
+ *  /device:
  *   post:
- *     summary: Register a new IoT device (ESP32)
+ *     summary: Register a new IoT device
  *     description: Creates a new device in the system. Usually called by the ESP32 on first boot or via admin panel.
  *     tags:
  *       - Device
@@ -24,7 +24,7 @@ const router = Router();
  *             required:
  *               - deviceName
  *             properties:
-  *               deviceName:
+ *               deviceName:
  *                 type: string
  *                 minLength: 3
  *                 maxLength: 50
