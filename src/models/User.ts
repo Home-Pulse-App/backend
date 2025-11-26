@@ -1,5 +1,5 @@
 import { Schema, model, Document } from 'mongoose';
-import { DEVICE_TYPES, IDevice } from './Device';
+import { IDevice } from './Device';
 
 export interface IUser extends Document {
   userName: string;
@@ -35,7 +35,7 @@ const userSchema = new Schema<IUser>(
     ],
     devices: [
       {
-        type: DEVICE_TYPES,
+        type: Schema.Types.ObjectId,
         ref: 'Device',
       },
     ],

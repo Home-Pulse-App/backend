@@ -1,6 +1,7 @@
 import client from '../utils/mqtt';
 import { subscribedTopics } from '../utils/mqtt.subscribes';
 import DeviceData, {IDeviceData} from '../models/DeviceData';
+import User from '../models/User';
 
 
 
@@ -10,15 +11,24 @@ client.on('message', async (topic, message) => {
     console.log(payload);
 
     // esp32-generic/iot1/data
-    const [deviceType, deviceId, data] = topic.split('/');
+    const [type, deviceName, data] = topic.split('/');
+
+    const user = await User.findOne({ "devices.deviceName": deviceName });
+    
+    if (!user) {
+      console.log("❌ No user owns this device");
+      return;
+    }
+    
+    const userId = user._id;
     
     const newData = await DeviceData.create({
-      userId,
-      deviceId,
+      userId: user._id,
+      deviceId: deviceName,
       data
     });
     
-    console.log(`💾 Saved readings for ${deviceId}`);
+    console.log(`💾 Saved readings for ${deviceName}`);
   } catch (err) {
     console.error('❌ Failed to store reading:', err);
   }
