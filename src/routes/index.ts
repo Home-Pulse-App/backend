@@ -4,7 +4,7 @@ import usersRoutes from './users.routes';
 import authRoutes from './auth.routes';
 import { auth } from '../middlewares/auth.middleware';
 import homesRoutes from './homes.routes';
-// import roomsRoutes from './rooms.routes';
+import roomsRoutes from './rooms.routes';
 import devicesRoutes from './devices.routes';
 
 const router = Router();
@@ -24,7 +24,7 @@ router.use('/api/users', usersRoutes);
 router.use('/api/homes', homesRoutes);
 
 // Rooms
-// router.use('/rooms', roomsRoutes);
+router.use('/api', roomsRoutes);
 
 // Devices
 router.use('/api/device', auth, devicesRoutes);

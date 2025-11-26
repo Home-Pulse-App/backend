@@ -4,7 +4,7 @@ import User from '../models/User';
 
 export const registerHome = async (req: Request, res: Response) => {
   try {
-    const tokenPayload = res.locals.userId as { id: string; email: string };
+    const tokenPayload = res.locals.userId;
     const userId = tokenPayload.id;
 
     const { homeName } = req.body;
