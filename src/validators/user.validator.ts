@@ -1,5 +1,5 @@
 import { body, ValidationChain } from 'express-validator';
-import User from '../modules/User';
+import User from '../models/User';
 
 // Reusable email validation (checks format + uniqueness)
 const emailValidation = () =>

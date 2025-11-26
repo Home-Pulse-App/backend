@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import Device, { IDevice } from '../modules/Device';
+import Device, { IDevice } from '../models/Device';
 import { validationResult } from 'express-validator';
-import User from '../modules/User';
+import User from '../models/User';
 
 export async function postDevice(req: Request, res: Response): Promise<void> {
 

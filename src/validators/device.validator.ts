@@ -1,5 +1,5 @@
 import { body, query, ValidationChain, validationResult } from 'express-validator';
-import { SENSOR_TYPES } from '../modules/Device';
+import { SENSOR_TYPES } from '../models/Device';
 
 export const validateCreateDevice: ValidationChain[] = [
   body('deviceName')

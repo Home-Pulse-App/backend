@@ -1,4 +1,4 @@
-import { IDevice } from '../modules/Device';
+import { IDevice } from '../models/Device';
 import mqtt from './mqtt';
 
 export function subscribeToDevices (devices: Array<IDevice>) {

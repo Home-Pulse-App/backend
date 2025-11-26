@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import User from "../modules/User";
+import User from "../models/User";
 import { subscribeToDevices } from "../utils/mqtt.subscribes";
 import { Request, Response } from "express";
 
@@ -15,7 +15,7 @@ export const login = async (req: Request, res: Response) => {
   if (!match) return res.status(401).json({ message: "Invalid credentials" });
 
   const token = jwt.sign(
-    { id: user.userId, email: user.email },
+    { id: user._id, email: user.email },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN }
   );

@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { Router } from 'express';
 import { auth } from '../middlewares/auth.middleware';
 import { validatorCreateUser, validatorUpdateUser } from '../validators/user.validator';
-import { createNewUser } from '../controllers/user.controller';
+import { createNewUser, deleteUser, updateUser } from '../controllers/user.controller';
 
 const router = Router();
 
@@ -61,14 +61,31 @@ const router = Router();
  *         description: Conflict – email already exists
  *       500:
  *         description: Internal server error
- * 
+ *   delete:
+ *     summary: Delete an existing user
+ *     description: Delete user information. Only the authenticated user can delete his profile.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User deleted successfully
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden – not allowed to modify this user
+ *       409:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
  *   put:
  *     summary: Update an existing user
  *     description: Updates user information. Only the authenticated user can modify a profile.
  *     tags:
  *       - Users
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -88,11 +105,6 @@ const router = Router();
  *                 format: password
  *                 minLength: 8
  *                 description: Only required if the user wants to change the password
- *               role:
- *                 type: string
- *                 enum: [user, admin]
- *                 description: Only admins can change the role
- *             additionalProperties: false
  *     responses:
  *       200:
  *         description: User updated successfully
@@ -119,9 +131,10 @@ const router = Router();
  *         description: User not found
  *       500:
  *         description: Internal server error
- */
+*/
 
-router.post('/',validatorCreateUser, createNewUser);
-router.put('/',auth,validatorUpdateUser);
+router.post('/', validatorCreateUser, createNewUser);
+router.put('/', auth, validatorUpdateUser, updateUser);
+router.delete('/', auth, deleteUser);
 
 export default router;
