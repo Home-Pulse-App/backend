@@ -25,12 +25,12 @@ router.use('/api/users', usersRoutes);
 router.use('/api/homes', homesRoutes);
 
 // Rooms
-router.use('/api', roomsRoutes);
+router.use('/api/homes/:homeId/rooms', roomsRoutes);
 
 // Devices
 router.use('/api/device', auth, devicesRoutes);
 
 // Data
-router.use('/api/device-data',auth,sensorsRoutes)
+router.use('/api/device-data', auth, sensorsRoutes);
 
 export default router;
