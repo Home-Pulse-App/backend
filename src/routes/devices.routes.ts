@@ -83,7 +83,7 @@ const router = Router();
  *   get:
  *     summary: Get devices from the user list
  *     tags:
- *       - Device array
+ *       - Device
  *     security:
  *       - BearerAuth: []
  *     responses:
@@ -104,11 +104,9 @@ const router = Router();
  *                   type: string
  *       401:
  *         description: Missing or invalid token
- */
+*/
 
 router.post('/',validateCreateDevice,postDevice);
 router.get('/', auth, getDevices);
-// router.get('/:device',auth,getDeviceDAta);
-
 
 export default router;
