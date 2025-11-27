@@ -108,7 +108,7 @@ const router = Router();
 
 router.post('/',validateCreateDevice,postDevice);
 router.get('/', auth, getDevices);
-router.get('/:device',auth,getDeviceDAta);
+// router.get('/:device',auth,getDeviceDAta);
 
 
 export default router;

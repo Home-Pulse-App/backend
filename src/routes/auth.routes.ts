@@ -42,29 +42,6 @@ const router = Router();
  *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
  *       401:
  *         description: Invalid credentials
- *
- * /auth/profile:
- *   get:
- *     summary: Get authenticated user profile
- *     tags:
- *       - Auth
- *     security:
- *       - BearerAuth: []
- *     responses:
- *       200:
- *         description: User profile returned successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: string
- *                 email:
- *                   type: string
- *                   format: email
- *       401:
- *         description: Missing or invalid token
  */
 
 router.post('/login',login);

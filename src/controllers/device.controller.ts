@@ -44,10 +44,19 @@ export async function postDevice(req: Request, res: Response): Promise<void> {
       state: 'OFFLINE',
     });
 
+    console.log('newDevice:',newDevice);
+    //update the devices of the user
+    const userResponse =  await User.findByIdAndUpdate( user.id, { $push: { devices: newDevice } });
+    console.log(userResponse);
+    if(!userResponse) {
+      res.status(409).json({
+        success: false,
+        message: `I cant update the user Devices Array`,
+      });
+      return;
+    }
     await newDevice.save(); //create a new device in the collection
 
-    //update the devices of the user
-    await User.findByIdAndUpdate(user._id, { $push: { devices: newDevice } }, { new: true });
 
     subscribeToDevice(newDevice);
 
@@ -81,7 +90,7 @@ export async function getDevices(req: Request, res: Response): Promise<void> {
   try {
     const user = res.locals.userId;
 
-    const registerUser = await User.findById(user.id);
+    const registerUser = await User.findById(user.id).populate('devices').exec();
 
     if (!registerUser) {
       res.status(409).json({
@@ -99,7 +108,7 @@ export async function getDevices(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    subscribeToDevices(registerUser.devices);
+    subscribeToDevices(registerUser.devices as unknown as IDevice[]);
 
     res.status(200).json({
       success: true,
@@ -126,3 +135,43 @@ export async function getDevices(req: Request, res: Response): Promise<void> {
     });
   }
 }
+
+// export async function getDeviceDAta(req: Request, res: Response): Promise<void> {
+//   try {
+//     const { deviceName } = req.params;
+  
+//     // Find the user owning this device
+//     const user = await User.findOne({ "devices.deviceName": deviceName });
+//     if (!user) {
+//       res.status(404).json({
+//         success: false,
+//         message: `Device ${deviceName} not found`,
+//       });
+//       return;
+//     }
+  
+//     // Subscribe to MQTT topic for live updates
+//     const topic = `+/` + deviceName + `/data`; // + can match device type
+//     client.subscribe(topic, (err) => {
+//       if (err) console.error(`Failed to subscribe to ${topic}`, err);
+//       else console.log(`Subscribed to ${topic}`);
+//     });
+  
+//     // Get the latest device readings from MongoDB
+//     const readings = await DeviceData.find({ deviceId: deviceName })
+//       .sort({ createdAt: -1 }) // newest first
+//       .limit(20); // last 20 readings
+  
+//     res.json({
+//       success: true,
+//       deviceName,
+//       readings,
+//     });
+//   } catch (err) {
+//     console.error('Error fetching device data:', err);
+//     res.status(500).json({
+//       success: false,
+//       message: 'Internal server error',
+//     });
+//   }
+// }
