@@ -1,0 +1,273 @@
+[{
+  "sensorsData": {
+    "temperature": 15,
+    "humidity": 48,
+    "light": 41,
+    "switch1": 0,
+    "switch2": 0,
+    "button1": 0,
+    "button2": 0
+  },
+  "createdAt": {
+    "$date": "2025-11-27T07:26:32.342Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-27T07:26:32.342Z"
+  }
+},
+{
+  "sensorsData": {
+    "temperature": 15,
+    "humidity": 48,
+    "light": 40,
+    "switch1": 0,
+    "switch2": 0,
+    "button1": 0,
+    "button2": 0
+  },
+  "createdAt": {
+    "$date": "2025-11-27T07:26:35.302Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-27T07:26:35.302Z"
+  }
+},
+{
+  "sensorsData": {
+    "temperature": 15,
+    "humidity": 48,
+    "light": 42,
+    "switch1": 0,
+    "switch2": 0,
+    "button1": 0,
+    "button2": 0
+  },
+  "createdAt": {
+    "$date": "2025-11-27T07:26:40.874Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-27T07:26:40.874Z"
+  }
+},
+{
+  "sensorsData": {
+    "temperature": 15,
+    "humidity": 48,
+    "light": 41,
+    "switch1": 0,
+    "switch2": 0,
+    "button1": 0,
+    "button2": 0
+  },
+  "createdAt": {
+    "$date": "2025-11-27T07:26:46.362Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-27T07:26:46.362Z"
+  }
+},
+{
+  "sensorsData": {
+    "temperature": 15,
+    "humidity": 48,
+    "light": 41,
+    "switch1": 0,
+    "switch2": 0,
+    "button1": 0,
+    "button2": 0
+  },
+  "createdAt": {
+    "$date": "2025-11-27T07:26:51.875Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-27T07:26:51.875Z"
+  }
+},
+{
+  "sensorsData": {
+    "temperature": 15,
+    "humidity": 48,
+    "light": 41,
+    "switch1": 0,
+    "switch2": 0,
+    "button1": 0,
+    "button2": 0
+  },
+  "createdAt": {
+    "$date": "2025-11-27T07:26:57.411Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-27T07:26:57.411Z"
+  }
+},
+{
+  "sensorsData": {
+    "temperature": 15,
+    "humidity": 48,
+    "light": 42,
+    "switch1": 0,
+    "switch2": 0,
+    "button1": 0,
+    "button2": 0
+  },
+  "createdAt": {
+    "$date": "2025-11-27T07:27:02.940Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-27T07:27:02.940Z"
+  },
+  "__v": 0
+},
+{
+  "sensorsData": {
+    "temperature": 15,
+    "humidity": 48,
+    "light": 41,
+    "switch1": 0,
+    "switch2": 0,
+    "button1": 0,
+    "button2": 0
+  },
+  "createdAt": {
+    "$date": "2025-11-27T07:27:08.451Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-27T07:27:08.451Z"
+  }
+},
+{
+  "sensorsData": {
+    "temperature": 15,
+    "humidity": 48,
+    "light": 41,
+    "switch1": 0,
+    "switch2": 0,
+    "button1": 0,
+    "button2": 0
+  },
+  "createdAt": {
+    "$date": "2025-11-27T07:27:14.009Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-27T07:27:14.009Z"
+  }
+},
+{
+  "sensorsData": {
+    "temperature": 15,
+    "humidity": 48,
+    "light": 41,
+    "switch1": 0,
+    "switch2": 0,
+    "button1": 0,
+    "button2": 0
+  },
+  "createdAt": {
+    "$date": "2025-11-27T07:27:19.195Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-27T07:27:19.195Z"
+  }
+},
+{
+  "sensorsData": {
+    "temperature": 15,
+    "humidity": 48,
+    "light": 42,
+    "switch1": 0,
+    "switch2": 0,
+    "button1": 0,
+    "button2": 0
+  },
+  "createdAt": {
+    "$date": "2025-11-27T07:27:24.534Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-27T07:27:24.534Z"
+  }
+},
+{
+  "sensorsData": {
+    "temperature": 15,
+    "humidity": 47,
+    "light": 61,
+    "switch1": 0,
+    "switch2": 0,
+    "button1": 0,
+    "button2": 0
+  },
+  "createdAt": {
+    "$date": "2025-11-27T09:04:43.931Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-27T09:04:43.931Z"
+  }
+},
+{
+  "sensorsData": {
+    "temperature": 15,
+    "humidity": 47,
+    "light": 61,
+    "switch1": 0,
+    "switch2": 0,
+    "button1": 0,
+    "button2": 0
+  },
+  "createdAt": {
+    "$date": "2025-11-27T09:04:48.646Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-27T09:04:48.646Z"
+  }
+},
+{
+  "sensorsData": {
+    "temperature": 15,
+    "humidity": 47,
+    "light": 61,
+    "switch1": 0,
+    "switch2": 0,
+    "button1": 0,
+    "button2": 0
+  },
+  "createdAt": {
+    "$date": "2025-11-27T09:04:54.171Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-27T09:04:54.171Z"
+  }
+},
+{
+  "sensorsData": {
+    "temperature": 15,
+    "humidity": 47,
+    "light": 61,
+    "switch1": 0,
+    "switch2": 0,
+    "button1": 0,
+    "button2": 0
+  },
+  "createdAt": {
+    "$date": "2025-11-27T09:04:59.726Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-27T09:04:59.726Z"
+  }
+},
+{
+  "sensorsData": {
+    "temperature": 15,
+    "humidity": 47,
+    "light": 61,
+    "switch1": 0,
+    "switch2": 0,
+    "button1": 0,
+    "button2": 0
+  },
+  "createdAt": {
+    "$date": "2025-11-27T09:05:05.224Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-27T09:05:05.224Z"
+  }
+}]

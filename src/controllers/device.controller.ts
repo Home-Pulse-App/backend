@@ -44,10 +44,8 @@ export async function postDevice(req: Request, res: Response): Promise<void> {
       state: 'OFFLINE',
     });
 
-    console.log('newDevice:',newDevice);
     //update the devices of the user
     const userResponse =  await User.findByIdAndUpdate( user.id, { $push: { devices: newDevice } });
-    console.log(userResponse);
     if(!userResponse) {
       res.status(409).json({
         success: false,
@@ -55,8 +53,8 @@ export async function postDevice(req: Request, res: Response): Promise<void> {
       });
       return;
     }
-    await newDevice.save(); //create a new device in the collection
 
+    await newDevice.save(); //create a new device in the collection
 
     subscribeToDevice(newDevice);
 

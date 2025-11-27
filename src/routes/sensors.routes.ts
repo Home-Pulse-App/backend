@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import 'dotenv/config';
 import { validateCreateDevice, validateDeviceId } from '../validators/device.validator';
-import { getDeviceData, getDeviceStats, getLatestDeviceData } from '../controllers/sensors.controller';
+import { getDeviceData, getDeviceStats, getLatestDeviceData } from '../controllers/device-data.controller';
 import { auth } from '../middlewares/auth.middleware';
 
 const router = Router();
