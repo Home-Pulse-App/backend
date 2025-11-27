@@ -1,8 +1,15 @@
 import { Router } from 'express';
 import { auth } from '../middlewares/auth.middleware';
-import { addRoom, getRooms } from '../controllers/room.controller';
+import {
+  addRoom,
+  getRooms,
+  getRoomDevices,
+  connectDevice,
+  disconnectDevice,
+  deleteRoom,
+} from '../controllers/room.controller';
 
-const router = Router();
+const router = Router({ mergeParams: true });
 
 /**
  * @openapi
@@ -73,11 +80,8 @@ router.post('/', auth, addRoom);
  *       500:
  *         description: Internal server error
  */
-
 router.get('/', auth, getRooms);
 
-<<<<<<< Updated upstream
-=======
 /**
  * @openapi
  * /homes/{homeId}/rooms/{roomId}/devices:
@@ -221,5 +225,4 @@ router.delete('/:roomId/disconnect/:deviceId', auth, disconnectDevice);
  */
 router.delete('/:roomId', auth, deleteRoom);
 
->>>>>>> Stashed changes
 export default router;

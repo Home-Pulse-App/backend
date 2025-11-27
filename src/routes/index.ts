@@ -28,7 +28,7 @@ router.use('/api/homes', homesRoutes);
 router.use('/api/homes/:homeId/rooms', roomsRoutes);
 
 // Devices
-router.use('/api/device', auth, devicesRoutes);
+router.use('/api/devices', auth, devicesRoutes);
 
 // Data
 router.use('/api/device-data', auth, sensorsRoutes);
