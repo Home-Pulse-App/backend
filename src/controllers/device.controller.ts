@@ -130,3 +130,51 @@ export async function getDevices(req: Request, res: Response): Promise<void> {
     });
   }
 }
+
+export const deleteDevice = async (req: Request, res: Response) => {
+  try {
+    const tokenPayload = res.locals.userId;
+    const userId = tokenPayload.id;
+
+    const { deviceId } = req.params;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    const device = await Device.findById(deviceId);
+    if (!device) {
+      return res.status(404).json({
+        success: false,
+        message: 'Device not found',
+      });
+    }
+
+    if (device.userId.toString() !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: 'You do not own this device',
+      });
+    }
+
+    await Device.findByIdAndDelete(deviceId);
+
+    user.devices = user.devices.filter((id) => id.toString() !== deviceId);
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Device deleted successfully',
+    });
+  } catch (error) {
+    console.error('deleteDevice error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+    });
+  }
+};
