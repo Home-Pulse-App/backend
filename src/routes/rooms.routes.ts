@@ -1,6 +1,13 @@
 import { Router } from 'express';
 import { auth } from '../middlewares/auth.middleware';
-import { addRoom, getRooms } from '../controllers/room.controller';
+import {
+  addRoom,
+  getRooms,
+  deleteRoom,
+  connectDevice,
+  disconnectDevice,
+  getRoomDevices,
+} from '../controllers/room.controller';
 
 const router = Router();
 
@@ -75,5 +82,149 @@ router.post('/homes/:homeId/rooms', auth, addRoom);
  */
 
 router.get('/homes/:homeId/rooms', auth, getRooms);
+
+/**
+ * @openapi
+ * /homes/{homeId}/rooms/{roomId}:
+ *   delete:
+ *     summary: Delete a room from a home
+ *     description: Deletes the specified room.
+ *     tags:
+ *       - Rooms
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: homeId
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: roomId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Room deleted successfully
+ *       403:
+ *         description: Forbidden — user is not owner of the home
+ *       404:
+ *         description: Room or Home not found
+ *       500:
+ *         description: Internal server error
+ */
+router.delete('/homes/:homeId/rooms/:roomId', auth, deleteRoom);
+
+/**
+ * @openapi
+ * /homes/{homeId}/rooms/{roomId}/connect/{deviceId}:
+ *   post:
+ *     summary: Connect a device to a room
+ *     tags: [Rooms]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: homeId
+ *         schema:
+ *           type: string
+ *         required: true
+ *       - in: path
+ *         name: roomId
+ *         schema:
+ *           type: string
+ *         required: true
+ *       - in: path
+ *         name: deviceId
+ *         schema:
+ *           type: string
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Device connected successfully
+ *       400:
+ *         description: Device already connected
+ *       404:
+ *         description: Not found
+ */
+router.post('/homes/:homeId/rooms/:roomId/connect/:deviceId', auth, connectDevice);
+
+/**
+ * @openapi
+ * /homes/{homeId}/rooms/{roomId}/disconnect/{deviceId}:
+ *   delete:
+ *     summary: Disconnect a device from a room
+ *     tags: [Rooms]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: homeId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the home
+ *       - in: path
+ *         name: roomId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the room
+ *       - in: path
+ *         name: deviceId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the device to disconnect
+ *     responses:
+ *       200:
+ *         description: Device disconnected successfully
+ *       400:
+ *         description: Device is not connected to this room
+ *       403:
+ *         description: Not your home or device
+ *       404:
+ *         description: Home, room, or device not found
+ *       500:
+ *         description: Internal server error
+ */
+router.delete('/homes/:homeId/rooms/:roomId/disconnect/:deviceId', auth, disconnectDevice);
+
+/**
+ * @openapi
+ * /homes/{homeId}/rooms/{roomId}/devices:
+ *   get:
+ *     summary: Get all devices of a room
+ *     description: Returns the list of devices connected to a specific room.
+ *     tags:
+ *       - Rooms
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: homeId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the home
+ *       - in: path
+ *         name: roomId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the room
+ *     responses:
+ *       200:
+ *         description: Devices fetched successfully
+ *       403:
+ *         description: Forbidden — user is not owner of the home
+ *       404:
+ *         description: Home or room not found
+ *       500:
+ *         description: Internal server error
+ */
+
+router.get('/homes/:homeId/rooms/:roomId/devices', auth, getRoomDevices);
 
 export default router;

@@ -1,4 +1,4 @@
-import {Request, Response } from 'express';
+import { Request, Response } from 'express';
 import Device, { IDevice } from '../models/Device';
 import { validationResult } from 'express-validator';
 import User from '../models/User';
@@ -17,13 +17,14 @@ export async function postDevice(req: Request, res: Response): Promise<void> {
 
   try {
     const { deviceName, type, sensors = [] } = req.body;
-    const user = res.locals.userId;
+    const tokenPayload = res.locals.userId;
+    const userId = tokenPayload.id;
 
-    const registerUser = await User.findById(user.id);
+    const registerUser = await User.findById(userId);
     if (!registerUser) {
       res.status(409).json({
         success: false,
-        message: `Can't find the user ${user}`,
+        message: `Can't find the user `,
       });
       return;
     }
@@ -38,25 +39,28 @@ export async function postDevice(req: Request, res: Response): Promise<void> {
     }
 
     const newDevice: IDevice = new Device({
+      userId: userId,
       deviceName: deviceName.trim(),
       sensors,
       type,
       state: 'OFFLINE',
     });
 
-    console.log('newDevice:',newDevice);
-    //update the devices of the user
-    const userResponse =  await User.findByIdAndUpdate( user.id, { $push: { devices: newDevice } });
-    console.log(userResponse);
-    if(!userResponse) {
+    await newDevice.save();
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $push: { devices: newDevice._id } },
+      { new: true },
+    );
+
+    if (!updatedUser) {
       res.status(409).json({
         success: false,
-        message: `I cant update the user Devices Array`,
+        message: `Cannot update the user's devices array`,
       });
       return;
     }
-    await newDevice.save(); //create a new device in the collection
-
 
     subscribeToDevice(newDevice);
 
@@ -70,18 +74,9 @@ export async function postDevice(req: Request, res: Response): Promise<void> {
   } catch (error: any) {
     console.error('postDevice error:', error);
 
-    if (error.code === 11000) {
-      res.status(409).json({
-        success: false,
-        message: `Device with deviceId "${req.body.deviceId}" already exists`,
-      });
-      return;
-    }
-
     res.status(500).json({
       success: false,
       message: 'Internal server error',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
     });
   }
 }
