@@ -1,13 +1,14 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import User from '../models/User';
-import { subscribeToDevices } from '../utils/mqtt.subscribes';
 import { Request, Response } from 'express';
+import { subscribeToDevices } from '../utils/mqtt.subscribes';
+import { IDevice } from '../models/Device';
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email }).populate('devices');
+  const user = await User.findOne({ email }).populate('devices').exec();
 
   if (!user) return res.status(401).json({ message: 'Invalid credentials' });
 
@@ -19,9 +20,8 @@ export const login = async (req: Request, res: Response) => {
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN }
   );
-  //get devices of the user and subscribe to them
-  const devices = user.devices;
-  subscribeToDevices(devices);
+
+  subscribeToDevices(user.devices as unknown as IDevice[]);
 
   res.json({ token });
 };

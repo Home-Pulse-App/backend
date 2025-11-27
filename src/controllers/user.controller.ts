@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import User, { IUser } from '../models/User';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 
 export async function createNewUser(req: Request, res: Response) {
   const errors = validationResult(req);
@@ -17,11 +16,9 @@ export async function createNewUser(req: Request, res: Response) {
   try {
     const { userName, email, password } = req.body;
 
-    const hashedPassword = await bcrypt.hash(password, 14);
-
-    const lastUser = await User.findOne().sort({ _id: -1 });
-
-    const newUser: IUser = new User({
+    const hashedPassword = await bcrypt.hash(password,14);
+    
+    const newUser : IUser = new User ({
       userName: userName,
       email: email,
       passwordHash: hashedPassword,
@@ -102,15 +99,15 @@ export async function updateUser(req: Request, res: Response) {
   }
 
   try {
-    const { userId } = res.locals.userId.id;
+    const userId = res.locals.userId.id;
     const { userName, email, password } = req.body;
 
-    const user = await User.findById({ _id: Number(userId) });
+    const user = await User.findById({ _id: userId._id });
 
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: `User with userId "${userId}" not found`,
+        message: `User with userId "${userId.userName}" not found`,
       });
     }
 
@@ -132,10 +129,8 @@ export async function updateUser(req: Request, res: Response) {
       success: true,
       message: 'User updated successfully',
       data: {
-        userId: user._id,
         userName: user.userName,
         email: user.email,
-        // Don't return passwordHash or sensitive data
       },
     });
   } catch (error: any) {

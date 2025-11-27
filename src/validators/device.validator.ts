@@ -35,5 +35,8 @@ export const validateCreateDevice: ValidationChain[] = [
 ];
 
 export const validateDeviceId = [
-  query('device').notEmpty().trim().withMessage('Missing ingredients'),
+  query('device')
+  .notEmpty()
+  .trim()
+  .withMessage('Missing device'),
 ];

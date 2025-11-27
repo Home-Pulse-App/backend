@@ -5,13 +5,13 @@ import router from './routes/index';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './swagger.config';
 import connectDB from './db';
-import mqttClient from './utils/mqtt';
+import mqttManager from './utils/mqtt';
 
 export const app = express();
 
 if (process.env.NODE_ENV !== 'test') {
   connectDB();
-  mqttClient.connect();
+  mqttManager.reconnect();
 }
 
 app.use(cors());

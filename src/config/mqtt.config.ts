@@ -6,7 +6,7 @@ const mqttConfig = {
     username: process.env.MQTT_USERNAME || undefined,
     password: process.env.MQTT_PASSWORD || undefined,
     clean: true,
-    reconnectPeriod: 5000,   // reconecta cada 5 segundos
+    reconnectPeriod: 3000,   // reconecta cada 1 segundos
     connectTimeout: 30 * 1000,
     keepalive: 60,
   }

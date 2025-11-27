@@ -1,4 +1,4 @@
-import mongoose, { Schema, model, Document } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
 
 export const SENSOR_TYPES = [
   'temperature',
@@ -36,7 +36,6 @@ export const DEVICE_TYPES = [
 export type DeviceType = (typeof DEVICE_TYPES)[number];
 
 export interface IDevice extends Document {
-  deviceId: number;
   deviceName: string;
   type: DeviceType ;
   state: 'ONLINE' | 'OFFLINE' | 'SLEEPING';
@@ -45,10 +44,6 @@ export interface IDevice extends Document {
 
 const deviceSchema = new Schema<IDevice>(
   {
-    deviceId: { 
-      type: Number, 
-    },
-
     deviceName: {
       type: String,
       required: true,
