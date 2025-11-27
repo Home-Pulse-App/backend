@@ -6,11 +6,11 @@ import DeviceData from '../models/DeviceData';
 import Device from '../models/Device';
 
 class MQTTManager {
-  private client: MqttClient;
+  public client: MqttClient;
   private subscriptions = new Map<string, { qos: 0 | 1 | 2 }>();
-  private isReconnecting = false;
+  public isReconnecting = false;
   private reconnectAttempts = 0;
-  private maxReconnectAttempts = 10;
+  private maxReconnectAttempts = 30;
 
   constructor() {
     this.client = mqtt.connect(mqttConfig.brokerUrl, mqttConfig.options);
@@ -59,15 +59,19 @@ class MQTTManager {
   private async handleMessage(topic: string, message: Buffer) {
     try {
       const payload = JSON.parse(message.toString());
+
       console.log('📨 Mensage on:', { topic, payload });
 
+      if (payload.light > 100) {
+        payload.light = 100;
+      };
       // esp32-generic/iot1/data
       const topicParts = topic.split('/');
       
       if (topicParts.length < 2) {
         console.error('❌ Wrong topic:', topic);
         return;
-      }
+      };
 
       const [type, deviceName] = topicParts;
       // console.log('📱 Device:', deviceName);
@@ -76,14 +80,14 @@ class MQTTManager {
       if (!device) {
         console.log(`❌ Device '${deviceName}' is not on the DB`);
         return;
-      }
+      };
 
       const user = await User.findOne({ devices: device._id as any });
 
       if (!user) {
         console.log(`❌ Not user for '${deviceName}'`);
         return;
-      }
+      };
       // console.log('device:',device);
       // console.log('user:',user);
 
@@ -102,7 +106,6 @@ class MQTTManager {
       console.error('❌ Error on the mesage:', err);
     }
   }
-
 
   public subscribe(topic: string, qos: 0 | 1 | 2 = 1): Promise<void> {
     return new Promise((resolve, reject) => {

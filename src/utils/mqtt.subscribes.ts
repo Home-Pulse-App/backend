@@ -6,6 +6,7 @@ import mqttManager from './mqtt';
  * Subscribe to multiple devices
  */
 export async function subscribeToDevices(devices: Array<IDevice>): Promise<void> {
+
   if (!devices || devices.length === 0) {
     console.log('ℹ️ there are not devices to subscribe');
     return;
@@ -18,6 +19,9 @@ export async function subscribeToDevices(devices: Array<IDevice>): Promise<void>
   try {
     await Promise.all(subscriptionPromises);
     console.log(`✅ Subscription done for ${devices.length} device(s)`);
+    if (!mqttManager.isConnected){
+      mqttManager.reconnect();
+    }
   } catch (error) {
     console.error('❌ Error on subscription to devices:', error);
   }
