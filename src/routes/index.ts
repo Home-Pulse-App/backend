@@ -6,6 +6,7 @@ import { auth } from '../middlewares/auth.middleware';
 import homesRoutes from './homes.routes';
 import roomsRoutes from './rooms.routes';
 import devicesRoutes from './devices.routes';
+import sensorsRoutes from './sensors.routes';
 
 const router = Router();
 
@@ -28,5 +29,8 @@ router.use('/api', roomsRoutes);
 
 // Devices
 router.use('/api/device', auth, devicesRoutes);
+
+// Data
+router.use('/api/device-data',auth,sensorsRoutes)
 
 export default router;
