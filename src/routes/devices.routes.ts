@@ -1,7 +1,12 @@
 import { Router } from 'express';
 import 'dotenv/config';
 import { validateCreateDevice, validateDeviceId } from '../validators/device.validator';
-import { getDevices, postDevice, deleteDevice } from '../controllers/device.controller';
+import {
+  getDevices,
+  postDevice,
+  deleteDevice,
+  getSingleDevice,
+} from '../controllers/device.controller';
 import { auth } from '../middlewares/auth.middleware';
 
 const router = Router();
@@ -153,6 +158,35 @@ router.post('/', validateCreateDevice, postDevice);
  *         description: Internal server error
  */
 router.get('/', auth, getDevices);
+
+/**
+ * @openapi
+ * /devices/{deviceId}:
+ *   get:
+ *     summary: Get a single device by ID
+ *     description: Returns a single device owned by the authenticated user.
+ *     tags:
+ *       - Device
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: deviceId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the device
+ *     responses:
+ *       200:
+ *         description: Device fetched successfully
+ *       403:
+ *         description: Forbidden — user is not the device owner
+ *       404:
+ *         description: Device not found
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/:deviceId', auth, getSingleDevice);
 
 /**
  * @openapi

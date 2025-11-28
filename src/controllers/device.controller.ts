@@ -131,6 +131,32 @@ export async function getDevices(req: Request, res: Response): Promise<void> {
   }
 }
 
+export const getSingleDevice = async (req: Request, res: Response) => {
+  try {
+    const tokenPayload = res.locals.userId;
+    const userId = tokenPayload.id;
+
+    const { deviceId } = req.params;
+
+    const device = await Device.findById(deviceId);
+    if (!device) {
+      return res.status(404).json({ error: 'Device not found' });
+    }
+
+    if (device.userId.toString() !== userId) {
+      return res.status(403).json({ error: 'Not your device' });
+    }
+
+    return res.status(200).json({
+      message: 'Device fetched successfully',
+      device,
+    });
+  } catch (error) {
+    console.error('Get device error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 export const deleteDevice = async (req: Request, res: Response) => {
   try {
     const tokenPayload = res.locals.userId;
