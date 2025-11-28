@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import 'dotenv/config';
-import { validateCreateDevice, validateDeviceId } from '../validators/device.validator';
-import { getDeviceData, getDeviceStats, getLatestDeviceData } from '../controllers/sensors.controller';
+import { getDeviceData, getDeviceStats, getLatestDeviceData, postDeviceData} from '../controllers/device-data.controller';
 import { auth } from '../middlewares/auth.middleware';
+import { validatorSensor } from '../validators/device-data.validator';
 
 const router = Router();
 
@@ -179,11 +179,164 @@ const router = Router();
  *                   example: Error fetching device data
  *                 error:
  *                   type: string
- *                   example: Database connection failed
+ *   post:
+ *     summary: Post a device sensor data
+ *     description: Update a sensor value for a specific device by publishing to MQTT
+ *     tags:
+ *       - Device Data
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: device
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Device ID (ObjectId) or deviceName
+ *         example: iot1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - sensor
+ *               - value
+ *             properties:
+ *               sensor:
+ *                 type: string
+ *                 description: Name of the sensor to update
+ *                 example: relay
+ *               value:
+ *                 oneOf:
+ *                   - type: string
+ *                   - type: number
+ *                   - type: boolean
+ *                 description: Value to set (on/off/1/0/true/false for switches, numeric for sensors)
+ *                 example: on
+ *               qos:
+ *                 type: integer
+ *                 minimum: 0
+ *                 maximum: 2
+ *                 default: 1
+ *                 description: MQTT Quality of Service level
+ *                 example: 1
+ *           examples:
+ *             onOffSensor:
+ *               summary: On/Off sensor (relay)
+ *               value:
+ *                 sensor: relay
+ *                 value: on
+ *             numericSensor:
+ *               summary: Numeric sensor (brightness)
+ *               value:
+ *                 sensor: brightness
+ *                 value: 75
+ *             booleanSensor:
+ *               summary: Boolean sensor
+ *               value:
+ *                 sensor: light
+ *                 value: true
+ *                 qos: 2
+ *     responses:
+ *       200:
+ *         description: Device data published successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Device data published successfully
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     topic:
+ *                       type: string
+ *                       description: MQTT topic where the message was published
+ *                       example: switch/iot1/relay/set
+ *                     value:
+ *                       type: string
+ *                       description: Published value (1 for on, 0 for off, or numeric)
+ *                       example: "1"
+ *                     qos:
+ *                       type: integer
+ *                       description: QoS level used
+ *                       example: 1
+ *       400:
+ *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: sensor
+ *                       message:
+ *                         type: string
+ *                         example: Sensor is required
+ *             examples:
+ *               missingSensor:
+ *                 summary: Missing sensor field
+ *                 value:
+ *                   success: false
+ *                   errors:
+ *                     - field: sensor
+ *                       message: Sensor is required
+ *               invalidValue:
+ *                 summary: Invalid value for sensor type
+ *                 value:
+ *                   success: false
+ *                   errors:
+ *                     - field: value
+ *                       message: Sensor 'relay' only accepts on/off values
+ *       401:
+ *         description: User not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: User not authenticated
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: Failed to publish device data
+ *                 details:
+ *                   type: string
+ *                   example: MQTT broker connection failed
 */
 
-// Get paginated device data
 router.get('/:device', auth, getDeviceData);
+router.post('/:device',auth,validatorSensor, postDeviceData);
 
 /**
  * @openapi
@@ -398,7 +551,6 @@ router.get('/:device/latest', auth, getLatestDeviceData);
  *                   example: false
  *                 message:
  *                   type: string
- *                   example: Field required (query param: field)
  *       401:
  *         description: User not authenticated
  *       404:
@@ -420,6 +572,7 @@ router.get('/:device/latest', auth, getLatestDeviceData);
 
 // Get statistics
 router.get('/:device/stats', auth, getDeviceStats);
+
 
 
 export default router;

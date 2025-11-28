@@ -1,0 +1,12 @@
+[{
+  "deviceName": "iot1",
+  "type": "esp32-generic",
+  "state": "OFFLINE",
+  "sensors": [
+    "temperature",
+    "humidity",
+    "light",
+    "switch1",
+    "switch2"
+  ]
+}]
