@@ -1,6 +1,6 @@
 
 const mqttConfig = {
-  brokerUrl: process.env.MQTT_URL || 'mqtt://broker.emqx.io',
+  brokerUrl: process.env.MQTT_URL || 'mqtt://localhost',
   options: {
     clientId: `express-server_1`,
     username: process.env.MQTT_USERNAME || undefined,

@@ -3,6 +3,8 @@ import { Request, Response } from 'express';
 import DeviceData from '../models/DeviceData';
 import Device from '../models/Device';
 import { Types } from 'mongoose';
+import { mqttManager } from '../utils/mqtt';
+import { validationResult } from 'express-validator';
 
 /**
  * Get device data by device ID or deviceName
@@ -293,69 +295,89 @@ export async function getDeviceStats (req: Request, res: Response) {
   }
 };
 
-// src/app.ts or src/index.ts
-// Add this route to your main app file:
-/*
-import deviceDataRoutes from './routes/deviceData.routes';
+export async function postDeviceData (req:Request, res:Response) {
 
-app.use('/api/device-data', deviceDataRoutes);
-*/
-
-
-// Example API Usage from Frontend:
-
-/*
-// 1. Get paginated device data
-fetch('/api/device-data/iot1?limit=50&skip=0&sort=-createdAt')
-  .then(res => res.json())
-  .then(data => console.log(data));
-
-// Response:
-{
-  "success": true,
-  "data": {
-    "device": {
-      "_id": "...",
-      "deviceName": "iot1",
-      "type": "esp32-generic"
-    },
-    "readings": [
-      {
-        "_id": "...",
-        "userId": "...",
-        "deviceId": "...",
-        "sensorsData": {
-          "temperature": 23.5,
-          "humidity": 65
-        },
-        "createdAt": "2025-01-15T10:30:00Z",
-        "updatedAt": "2025-01-15T10:30:00Z"
-      }
-      // ... more readings
-    ],
-    "pagination": {
-      "total": 500,
-      "limit": 50,
-      "skip": 0,
-      "hasMore": true,
-      "page": 1,
-      "totalPages": 10
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: errors.array(),
+      });
+      return;
     }
+  
+  try {
+    const { device } = req.params;
+    const { sensor, value } = req.body;
+
+    const dbDevice = await Device.findOne({ deviceName: device });
+
+    const normalizedSensor = String(sensor).toLowerCase();
+
+    const topic = `${dbDevice?.type}/${dbDevice?.deviceName}/${normalizedSensor}/set`;
+
+    let message:string | Buffer<ArrayBufferLike>;
+    const normalizedValue = String(value).toLowerCase();
+    
+    if (['on', '1', 'true'].includes(normalizedValue)) {
+      message = '1';
+    } else if (['off', '0', 'false'].includes(normalizedValue)) {
+      message = '0';
+    } else {
+      message = String(value);
+    }
+    
+    await mqttManager.publish(topic, message);
+    
+    console.log(`Published to MQTT - Topic: ${topic}, Message: ${message}`);
+    
+    res.status(200).json({
+      success: true,
+      message: 'Device data published successfully',
+      data: {
+        topic,
+        value: message,
+      }
+    });
+    
+  } catch (error: any) {
+    console.error('Error publishing device data:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to publish device data',
+      details: error.message
+    });
   }
+};
+
+// ===================================================
+
+// Example request body:
+/*
+POST /api/device-data/livingroom-light
+Headers:
+  Authorization: Bearer <your-token>
+  Content-Type: application/json
+
+Body (On/Off sensor):
+{
+  "sensor": "relay",
+  "value": "on",
+  "type": "switch"
 }
 
-// 2. Get latest reading
-fetch('/api/device-data/iot1/latest')
-  .then(res => res.json())
-  .then(data => console.log(data.data.latest.sensorsData));
+Body (Numeric sensor with on/off):
+{
+  "sensor": "temperature",
+  "value": "off",
+  "type": "thermostat"
+}
 
-// 3. Get statistics
-fetch('/api/device-data/iot1/stats?field=temperature&period=day')
-  .then(res => res.json())
-  .then(data => console.log(data.data.stats));
-
-// 4. Get data with date range
-fetch('/api/device-data/iot1?startDate=2025-01-01&endDate=2025-01-15')
-  .then(res => res.json())
-  .then(data => console.log(data));
+Body (Numeric sensor with value):
+{
+  "sensor": "brightness",
+  "value": 75,
+  "type": "dimmer"
+}
 */

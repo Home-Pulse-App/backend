@@ -6,7 +6,7 @@ import { auth } from '../middlewares/auth.middleware';
 import homesRoutes from './homes.routes';
 import roomsRoutes from './rooms.routes';
 import devicesRoutes from './devices.routes';
-import sensorsRoutes from './sensors.routes';
+import sensorsRoutes from './device-data.routes';
 
 const router = Router();
 
