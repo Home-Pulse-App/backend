@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { getRoom, updateRoom } from "../controllers/room.controller";
+import { getSplatFile } from "../controllers/splat.controller";
 
 
 const router = Router();
@@ -53,6 +54,7 @@ const router = Router();
  *                   type: string
  *               viewSplat:
  *                 type: string
+ *                 description: Base64 encoded splat file
  *     responses:
  *       200:
  *         description: Room updated successfully
@@ -60,9 +62,36 @@ const router = Router();
  *         description: Room not found
  *       500:
  *         description: Internal server error
+ * /room/{roomId}/splat:
+ *   get:
+ *     summary: Get splat file for a room
+ *     description: Downloads the splat file associated with the room
+ *     tags:
+ *       - Rooms
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: roomId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Splat file downloaded successfully
+ *         content:
+ *           application/octet-stream:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       404:
+ *         description: Room or splat file not found
+ *       500:
+ *         description: Internal server error
  */
 
 router.get('/:roomId', getRoom);
 router.put('/:roomId', updateRoom);
+router.get('/:roomId/splat', getSplatFile);
 
 export default router;
