@@ -16,9 +16,9 @@ export async function createNewUser(req: Request, res: Response) {
   try {
     const { userName, email, password } = req.body;
 
-    const hashedPassword = await bcrypt.hash(password,14);
-    
-    const newUser : IUser = new User ({
+    const hashedPassword = await bcrypt.hash(password, 14);
+
+    const newUser: IUser = new User({
       userName: userName,
       email: email,
       passwordHash: hashedPassword,
@@ -36,9 +36,11 @@ export async function createNewUser(req: Request, res: Response) {
     console.error('postDevice error:', error);
 
     if (error.code === 11000) {
+      const field = Object.keys(error.keyValue || {})[0] || 'field';
+      const value = error.keyValue?.[field] || 'unknown';
       res.status(409).json({
         success: false,
-        message: `User with userId "${req.body.userId}" already exists`,
+        message: `A user with this ${field} "${value}" already exists`,
       });
       return;
     }

@@ -7,6 +7,7 @@ import {
   connectDevice,
   disconnectDevice,
   deleteRoom,
+  updateRoom,
 } from '../controllers/room.controller';
 
 const router = Router({ mergeParams: true });
@@ -222,8 +223,49 @@ router.delete('/:roomId/disconnect/:deviceId', auth, disconnectDevice);
  *         description: Room or Home not found
  *       500:
  *         description: Internal server error
+ *   put:
+ *     summary: Update a room
+ *     description: Updates the specified room.
+ *     tags:
+ *       - Rooms
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: homeId
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: roomId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               viewDevices:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               viewSplat:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Room updated successfully
+ *       403:
+ *         description: Forbidden — user is not owner of the home
+ *       404:
+ *         description: Room or Home not found
+ *       500:
+ *         description: Internal server error
  */
 router.delete('/:roomId', auth, deleteRoom);
+router.put('/:roomId', auth, updateRoom);
 
 /**
  * @openapi
