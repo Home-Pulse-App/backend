@@ -136,9 +136,12 @@ export const updateRoom = async (req: Request, res: Response) => {
     if (!room) {
       return res.status(404).json({ error: 'Room not found' });
     }
-
-    room.viewDevices = viewDevices;
-    room.viewSplat = viewSplat;
+    if (viewDevices) {
+      room.viewDevices = viewDevices;
+    }
+    if (viewSplat) {
+      room.viewSplat = viewSplat;
+    }
     await room.save();
 
     return res.status(200).json({
