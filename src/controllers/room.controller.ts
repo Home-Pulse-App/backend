@@ -74,7 +74,28 @@ export const getRooms = async (req: Request, res: Response) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
+export const getRoom = async (req: Request, res: Response) => {
+  try {
+    const tokenPayload = res.locals.userId;
+    const userId = tokenPayload.id;
 
+    const { roomId } = req.params;
+
+    const room = await Room.findById(roomId);
+
+    if (!room) {
+      return res.status(404).json({ error: 'Room not found' });
+    }
+
+    return res.status(200).json({
+      message: 'Room fetched successfully',
+      room,
+    });
+  } catch (error) {
+    console.error('Error fetching room:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
 export const deleteRoom = async (req: Request, res: Response) => {
   try {
     const tokenPayload = res.locals.userId;
