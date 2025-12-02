@@ -139,18 +139,8 @@ export const updateRoom = async (req: Request, res: Response) => {
     const tokenPayload = res.locals.userId;
     const userId = tokenPayload.id;
 
-    const { homeId, roomId } = req.params;
+    const { roomId } = req.params;
     const { viewDevices, viewSplat } = req.body;
-
-    const home = await Home.findById(homeId);
-
-    if (!home) {
-      return res.status(404).json({ error: 'Home not found' });
-    }
-
-    if (home.userId.toString() !== userId) {
-      return res.status(403).json({ error: 'Not your home' });
-    }
 
     const room = await Room.findById(roomId);
 

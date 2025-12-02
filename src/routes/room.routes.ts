@@ -36,11 +36,6 @@ const router = Router();
  *       - BearerAuth: []
  *     parameters:
  *       - in: path
- *         name: homeId
- *         required: true
- *         schema:
- *           type: string
- *       - in: path
  *         name: roomId
  *         required: true
  *         schema:
@@ -61,13 +56,12 @@ const router = Router();
  *     responses:
  *       200:
  *         description: Room updated successfully
- *       403:
- *         description: Forbidden — user is not owner of the home
  *       404:
- *         description: Room or Home not found
+ *         description: Room not found
  *       500:
  *         description: Internal server error
  */
+
 router.get('/:roomId', getRoom);
 router.put('/:roomId', updateRoom);
 
