@@ -22,7 +22,7 @@ class MQTTManager {
       console.log('✅ MQTT connected to', mqttConfig.brokerUrl);
       this.reconnectAttempts = 0;
       this.isReconnecting = false;
-      
+
       this.resubscribeAll();
     });
 
@@ -38,7 +38,7 @@ class MQTTManager {
     this.client.on('reconnect', () => {
       this.reconnectAttempts++;
       console.log(`🔄 Reconnecting MQTT... (try ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
-      
+
       if (this.reconnectAttempts >= this.maxReconnectAttempts) {
         console.error('❌ Max number reconnections reached');
         this.client.end();
@@ -67,7 +67,7 @@ class MQTTManager {
       };
       // esp32-generic/iot1/data
       const topicParts = topic.split('/');
-      
+
       if (topicParts.length < 2) {
         console.error('❌ Wrong topic:', topic);
         return;
@@ -97,13 +97,13 @@ class MQTTManager {
         sensorsData: payload
       });
 
-      console.log('newDAta:',newData);
+      console.log('newDAta:', newData);
 
       await newData.save();
       console.log(`💾 Datos saved ${deviceName}`);
-      
+
     } catch (err) {
-      console.error('❌ Error on the mesage:', err);
+      console.error('❌ Error on the message:', err);
     }
   }
 
