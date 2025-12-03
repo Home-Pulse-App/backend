@@ -62,6 +62,7 @@ const router = Router();
  *         description: Room not found
  *       500:
  *         description: Internal server error
+ * 
  * /room/{roomId}/splat:
  *   get:
  *     summary: Get splat file for a room

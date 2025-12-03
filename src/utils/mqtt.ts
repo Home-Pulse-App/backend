@@ -4,6 +4,7 @@ import mqttConfig from '../config/mqtt.config';
 import User from '../models/User';
 import DeviceData from '../models/DeviceData';
 import Device from '../models/Device';
+import { deadManSwitch } from './deadManSwitch';
 
 class MQTTManager {
   public client: MqttClient;
@@ -59,22 +60,18 @@ class MQTTManager {
   private async handleMessage(topic: string, message: Buffer) {
     try {
       const payload = JSON.parse(message.toString());
-
       console.log('📨 Mensage on:', { topic, payload });
-
+      // Validate payload light value to 100 if it's greater than 100
+      //TODO validate full payload
       if (payload.light > 100) {
         payload.light = 100;
       };
-      // esp32-generic/iot1/data
       const topicParts = topic.split('/');
-
       if (topicParts.length < 2) {
         console.error('❌ Wrong topic:', topic);
         return;
       };
-
       const [type, deviceName] = topicParts;
-      // console.log('📱 Device:', deviceName);
 
       const device = await Device.findOne({ deviceName: deviceName });
       if (!device) {
@@ -83,24 +80,30 @@ class MQTTManager {
       };
 
       const user = await User.findOne({ devices: device._id as any });
-
       if (!user) {
         console.log(`❌ Not user for '${deviceName}'`);
         return;
       };
-      // console.log('device:',device);
-      // console.log('user:',user);
 
       const newData = new DeviceData({
         userId: user._id,
         deviceId: device._id,
         sensorsData: payload
       });
-
-      console.log('newDAta:', newData);
-
       await newData.save();
       console.log(`💾 Datos saved ${deviceName}`);
+
+      // Update device state to ONLINE using findByIdAndUpdate to avoid validation issues
+      const updatedDevice = await Device.findByIdAndUpdate(
+        device._id,
+        { state: 'ONLINE' },
+        { new: true, runValidators: false }
+      );
+
+      if (updatedDevice) {
+        console.log(`✅ Device ${deviceName} state updated to ONLINE`);
+        deadManSwitch(updatedDevice);
+      }
 
     } catch (err) {
       console.error('❌ Error on the message:', err);
