@@ -49,8 +49,8 @@ describe('Integration Test - Device Sensor Data Flow', () => {
       });
 
     expect(loginResponse.status).toBe(200);
-    expect(loginResponse.body.token).toBeDefined();
-    token = loginResponse.body.token;
+    expect(loginResponse.body.ResponseData.token).toBeDefined();
+    token = loginResponse.body.ResponseData.token;
 
     // Step 3: Register a device with multiple sensors
     deviceName = 'SensorHub001';
@@ -292,7 +292,7 @@ describe('Integration Test - Device Sensor Data Flow', () => {
         password: 'Password123!',
       });
 
-    token = loginResponse.body.token;
+    token = loginResponse.body.ResponseData.token;
 
     // Register device
     const deviceResponse = await request(server)
@@ -385,7 +385,7 @@ describe('Integration Test - Device Sensor Data Flow', () => {
         password: 'Password123!',
       });
 
-    token = loginResponse.body.token;
+    token = loginResponse.body.ResponseData.token;
 
     // Register device but don't add any sensor data
     const deviceResponse = await request(server)

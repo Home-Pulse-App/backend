@@ -73,7 +73,11 @@ describe('Auth Routes', () => {
       });
 
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ token: 'mock-token' });
+    expect(response.body).toEqual({ 
+      ResponseData: { 
+        token: 'mock-token' 
+      } 
+    });
   });
 
   test('POST /api/auth/login - Invalid Email', async () => {

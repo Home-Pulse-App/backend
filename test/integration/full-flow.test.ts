@@ -43,8 +43,8 @@ describe('Integration Test - Full User Flow', () => {
       });
 
     expect(loginResponse.status).toBe(200);
-    expect(loginResponse.body.token).toBeDefined();
-    const token = loginResponse.body.token;
+    expect(loginResponse.body.ResponseData.token).toBeDefined();
+    const token = loginResponse.body.ResponseData.token;
 
     // Step 3: Create a new home
     const homeResponse = await request(server)
