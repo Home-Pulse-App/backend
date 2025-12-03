@@ -85,7 +85,7 @@ export const getRoom = async (req: Request, res: Response) => {
     if (!roomId || roomId === 'null' || roomId === 'undefined' || !Types.ObjectId.isValid(roomId)) {
       return res.status(400).json({
         success: false,
-        error: 'Invalid room ID provided'
+        error: 'Invalid room ID provided',
       });
     }
 
@@ -154,7 +154,7 @@ export const updateRoom = async (req: Request, res: Response) => {
     if (!roomId || roomId === 'null' || roomId === 'undefined' || !Types.ObjectId.isValid(roomId)) {
       return res.status(400).json({
         success: false,
-        error: 'Invalid room ID provided'
+        error: 'Invalid room ID provided',
       });
     }
 
@@ -264,6 +264,9 @@ export const connectDevice = async (req: Request, res: Response) => {
     room.devices.push(device._id);
     await room.save();
 
+    device.connectedToRoom = room._id;
+    await device.save();
+
     return res.status(200).json({
       message: 'Device connected successfully',
       room,
@@ -300,6 +303,9 @@ export const disconnectDevice = async (req: Request, res: Response) => {
 
     room.devices = room.devices.filter((d) => !d.equals(device._id));
     await room.save();
+
+    device.connectedToRoom = null;
+    await device.save();
 
     return res.status(200).json({
       message: 'Device disconnected successfully',

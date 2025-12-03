@@ -25,7 +25,7 @@ const roomSchema = new Schema<IRoom>(
     devices: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Devices',
+        ref: 'Device',
         default: [],
       },
     ],
