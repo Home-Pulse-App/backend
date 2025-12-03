@@ -4,6 +4,8 @@ export interface IRoom extends Document {
   roomName: string;
   homeId: Types.ObjectId;
   devices: Types.ObjectId[];
+  viewDevices: Types.ObjectId[];
+  viewSplatFileId: Types.ObjectId | null; // GridFS file reference
 }
 
 const roomSchema = new Schema<IRoom>(
@@ -23,10 +25,21 @@ const roomSchema = new Schema<IRoom>(
     devices: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Device',
+        ref: 'Devices',
         default: [],
       },
     ],
+    viewDevices: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'ViewDevices',
+        default: [],
+      },
+    ],
+    viewSplatFileId: {
+      type: Schema.Types.ObjectId,
+      default: null,
+    },
   },
   { timestamps: true },
 );

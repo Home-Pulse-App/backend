@@ -29,6 +29,8 @@ export const addRoom = async (req: Request, res: Response) => {
       roomName,
       homeId: new Types.ObjectId(homeId),
       devices: [],
+      viewDevices: [],
+      viewSplatFileId: null,
     });
 
     home.rooms.push(newRoom._id);
@@ -72,7 +74,36 @@ export const getRooms = async (req: Request, res: Response) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
+export const getRoom = async (req: Request, res: Response) => {
+  try {
+    const tokenPayload = res.locals.userId;
+    const userId = tokenPayload.id;
 
+    const { roomId } = req.params;
+
+    // Validate roomId
+    if (!roomId || roomId === 'null' || roomId === 'undefined' || !Types.ObjectId.isValid(roomId)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid room ID provided'
+      });
+    }
+
+    const room = await Room.findById(roomId);
+
+    if (!room) {
+      return res.status(404).json({ error: 'Room not found' });
+    }
+
+    return res.status(200).json({
+      message: 'Room fetched successfully',
+      room,
+    });
+  } catch (error) {
+    console.error('Error fetching room:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
 export const deleteRoom = async (req: Request, res: Response) => {
   try {
     const tokenPayload = res.locals.userId;
@@ -108,6 +139,91 @@ export const deleteRoom = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error deleting room:', error);
     return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const updateRoom = async (req: Request, res: Response) => {
+  try {
+    const tokenPayload = res.locals.userId;
+    const userId = tokenPayload.id;
+
+    const { roomId } = req.params;
+    const { viewDevices, viewSplat } = req.body;
+
+    // Validate roomId
+    if (!roomId || roomId === 'null' || roomId === 'undefined' || !Types.ObjectId.isValid(roomId)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid room ID provided'
+      });
+    }
+
+    const room = await Room.findById(roomId);
+
+    if (!room) {
+      return res.status(404).json({ error: 'Room not found' });
+    }
+
+    // Update viewDevices if provided
+    if (viewDevices) {
+      room.viewDevices = viewDevices;
+    }
+
+    // Handle viewSplat file upload to GridFS
+    if (viewSplat) {
+      const { getGridFSBucket } = await import('../utils/gridfs');
+      const bucket = getGridFSBucket();
+
+      // Delete old file if exists
+      if (room.viewSplatFileId) {
+        try {
+          await bucket.delete(room.viewSplatFileId);
+        } catch (error) {
+          console.error('Error deleting old splat file:', error);
+          // Continue even if delete fails
+        }
+      }
+
+      // Convert base64 to buffer
+      const base64Data = viewSplat.replace(/^data:.*;base64,/, '');
+      const buffer = Buffer.from(base64Data, 'base64');
+
+      // Upload to GridFS
+      const uploadStream = bucket.openUploadStream(`splat_${roomId}_${Date.now()}.splat`, {
+        metadata: {
+          roomId: roomId,
+          uploadedAt: new Date(),
+        },
+      });
+
+      // Write buffer and wait for completion
+      await new Promise<void>((resolve, reject) => {
+        uploadStream.on('finish', () => resolve());
+        uploadStream.on('error', (error) => reject(error));
+        uploadStream.write(buffer);
+        uploadStream.end();
+      });
+
+      room.viewSplatFileId = uploadStream.id as Types.ObjectId;
+    }
+
+    await room.save();
+
+    return res.status(200).json({
+      success: true,
+      message: `Room ${room.roomName} updated successfully`,
+      data: {
+        roomId: room._id,
+        viewSplatFileId: room.viewSplatFileId,
+      },
+    });
+  } catch (error) {
+    console.error('Error updating room:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Internal server error',
+      details: process.env.NODE_ENV === 'development' ? (error as Error).message : undefined,
+    });
   }
 };
 

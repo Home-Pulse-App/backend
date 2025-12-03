@@ -7,6 +7,7 @@ import {
   connectDevice,
   disconnectDevice,
   deleteRoom,
+  updateRoom,
 } from '../controllers/room.controller';
 
 const router = Router({ mergeParams: true });

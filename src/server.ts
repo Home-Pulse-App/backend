@@ -10,12 +10,18 @@ import mqttManager from './utils/mqtt';
 export const app = express();
 
 if (process.env.NODE_ENV !== 'test') {
-  connectDB();
+  connectDB().then(() => {
+    // Initialize GridFS after DB connection
+    const { initGridFS } = require('./utils/gridfs');
+    initGridFS();
+    console.log('GridFS initialized');
+  });
   mqttManager.reconnect();
 }
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '50mb' })); // Increased limit for base64 splat files
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 

@@ -350,34 +350,3 @@ export async function postDeviceData (req:Request, res:Response) {
     });
   }
 };
-
-// ===================================================
-
-// Example request body:
-/*
-POST /api/device-data/livingroom-light
-Headers:
-  Authorization: Bearer <your-token>
-  Content-Type: application/json
-
-Body (On/Off sensor):
-{
-  "sensor": "relay",
-  "value": "on",
-  "type": "switch"
-}
-
-Body (Numeric sensor with on/off):
-{
-  "sensor": "temperature",
-  "value": "off",
-  "type": "thermostat"
-}
-
-Body (Numeric sensor with value):
-{
-  "sensor": "brightness",
-  "value": 75,
-  "type": "dimmer"
-}
-*/

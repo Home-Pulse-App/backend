@@ -40,10 +40,13 @@ const router = Router();
  *                 token:
  *                   type: string
  *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                 user:
+ *                   type: string
+ *                   example: user123
  *       401:
  *         description: Invalid credentials
  */
 
-router.post('/login',login);
+router.post('/login', login);
 
 export default router;

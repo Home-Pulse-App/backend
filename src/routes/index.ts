@@ -7,6 +7,7 @@ import homesRoutes from './homes.routes';
 import roomsRoutes from './rooms.routes';
 import devicesRoutes from './devices.routes';
 import sensorsRoutes from './device-data.routes';
+import roomRoutes from './room.routes';
 
 const router = Router();
 
@@ -26,6 +27,7 @@ router.use('/api/homes', homesRoutes);
 
 // Rooms
 router.use('/api/homes/:homeId/rooms', roomsRoutes);
+router.use('/api/room', auth, roomRoutes);
 
 // Devices
 router.use('/api/devices', auth, devicesRoutes);

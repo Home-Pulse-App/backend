@@ -22,6 +22,10 @@ export const login = async (req: Request, res: Response) => {
   );
 
   subscribeToDevices(user.devices as unknown as IDevice[]);
+  const ResponseData = {
+    token,
+    user: user.userName
+  };
 
-  res.json({ token });
+  res.json({ ResponseData });
 };
