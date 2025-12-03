@@ -1,4 +1,4 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model, Document, Types } from 'mongoose';
 
 export const SENSOR_TYPES = [
   'temperature',
@@ -38,6 +38,7 @@ export interface IDevice extends Document {
   type: DeviceType;
   state: 'ONLINE' | 'OFFLINE' | 'SLEEPING';
   sensors: Array<string>;
+  connectedToRoom?: Types.ObjectId | null;
 }
 
 const deviceSchema = new Schema<IDevice>(
@@ -74,6 +75,12 @@ const deviceSchema = new Schema<IDevice>(
         required: true,
       },
     ],
+
+    connectedToRoom: {
+      type: Schema.Types.ObjectId,
+      ref: 'Room',
+      default: null,
+    },
   },
   { timestamps: true },
 );
