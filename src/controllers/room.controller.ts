@@ -158,64 +158,114 @@ export const updateRoom = async (req: Request, res: Response) => {
       });
     }
 
-    const room = await Room.findById(roomId);
+    // If only updating viewDevices, use findByIdAndUpdate to avoid version conflicts
+    if (viewDevices && !viewSplat) {
+      const updatedRoom = await Room.findByIdAndUpdate(
+        roomId,
+        { $set: { viewDevices } },
+        { new: true, runValidators: true }
+      );
 
-    if (!room) {
-      return res.status(404).json({ error: 'Room not found' });
-    }
-
-    // Update viewDevices if provided
-    if (viewDevices) {
-      room.viewDevices = viewDevices;
-    }
-
-    // Handle viewSplat file upload to GridFS
-    if (viewSplat) {
-      const { getGridFSBucket } = await import('../utils/gridfs');
-      const bucket = getGridFSBucket();
-
-      // Delete old file if exists
-      if (room.viewSplatFileId) {
-        try {
-          await bucket.delete(room.viewSplatFileId);
-        } catch (error) {
-          console.error('Error deleting old splat file:', error);
-          // Continue even if delete fails
-        }
+      if (!updatedRoom) {
+        return res.status(404).json({ error: 'Room not found' });
       }
 
-      // Convert base64 to buffer
-      const base64Data = viewSplat.replace(/^data:.*;base64,/, '');
-      const buffer = Buffer.from(base64Data, 'base64');
-
-      // Upload to GridFS
-      const uploadStream = bucket.openUploadStream(`splat_${roomId}_${Date.now()}.splat`, {
-        metadata: {
-          roomId: roomId,
-          uploadedAt: new Date(),
+      return res.status(200).json({
+        success: true,
+        message: `Room ${updatedRoom.roomName} updated successfully`,
+        data: {
+          roomId: updatedRoom._id,
+          viewSplatFileId: updatedRoom.viewSplatFileId,
         },
       });
-
-      // Write buffer and wait for completion
-      await new Promise<void>((resolve, reject) => {
-        uploadStream.on('finish', () => resolve());
-        uploadStream.on('error', (error) => reject(error));
-        uploadStream.write(buffer);
-        uploadStream.end();
-      });
-
-      room.viewSplatFileId = uploadStream.id as Types.ObjectId;
     }
 
-    await room.save();
+    // For viewSplat updates or combined updates, use retry logic
+    const maxRetries = 3;
+    let retryCount = 0;
+    let lastError: any;
 
-    return res.status(200).json({
-      success: true,
-      message: `Room ${room.roomName} updated successfully`,
-      data: {
-        roomId: room._id,
-        viewSplatFileId: room.viewSplatFileId,
-      },
+    while (retryCount < maxRetries) {
+      try {
+        const room = await Room.findById(roomId);
+
+        if (!room) {
+          return res.status(404).json({ error: 'Room not found' });
+        }
+
+        // Update viewDevices if provided
+        if (viewDevices) {
+          room.viewDevices = viewDevices;
+        }
+
+        // Handle viewSplat file upload to GridFS
+        if (viewSplat) {
+          const { getGridFSBucket } = await import('../utils/gridfs');
+          const bucket = getGridFSBucket();
+
+          // Delete old file if exists
+          if (room.viewSplatFileId) {
+            try {
+              await bucket.delete(room.viewSplatFileId);
+            } catch (error) {
+              console.error('Error deleting old splat file:', error);
+              // Continue even if delete fails
+            }
+          }
+
+          // Convert base64 to buffer
+          const base64Data = viewSplat.replace(/^data:.*;base64,/, '');
+          const buffer = Buffer.from(base64Data, 'base64');
+
+          // Upload to GridFS
+          const uploadStream = bucket.openUploadStream(`splat_${roomId}_${Date.now()}.splat`, {
+            metadata: {
+              roomId: roomId,
+              uploadedAt: new Date(),
+            },
+          });
+
+          // Write buffer and wait for completion
+          await new Promise<void>((resolve, reject) => {
+            uploadStream.on('finish', () => resolve());
+            uploadStream.on('error', (error) => reject(error));
+            uploadStream.write(buffer);
+            uploadStream.end();
+          });
+
+          room.viewSplatFileId = uploadStream.id as Types.ObjectId;
+        }
+
+        await room.save();
+
+        return res.status(200).json({
+          success: true,
+          message: `Room ${room.roomName} updated successfully`,
+          data: {
+            roomId: room._id,
+            viewSplatFileId: room.viewSplatFileId,
+          },
+        });
+      } catch (error: any) {
+        // Check if it's a version error
+        if (error.name === 'VersionError') {
+          lastError = error;
+          retryCount++;
+          console.log(`Version conflict, retrying... (${retryCount}/${maxRetries})`);
+          // Wait a bit before retrying
+          await new Promise(resolve => setTimeout(resolve, 100 * retryCount));
+          continue;
+        }
+        // If it's not a version error, throw it
+        throw error;
+      }
+    }
+
+    // If we exhausted all retries
+    console.error('Max retries reached for version conflict:', lastError);
+    return res.status(409).json({
+      success: false,
+      error: 'Conflict: Document was modified by another request. Please try again.',
     });
   } catch (error) {
     console.error('Error updating room:', error);
