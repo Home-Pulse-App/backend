@@ -1,20 +1,21 @@
-# 🏠 HomePulse – Backend (API + MQTT + DB)
+# 🏠 HomePulse Backend (API + MQTT + DB)
 
-HomePulse Backend is the core of the smart-home platform, providing REST API endpoints, MQTT real-time processing, WebSocket updates, database storage, authentication, device management, and full Swagger documentation.
+HomePulse Backend is the core of the smart-home platform.
 
-This backend communicates with ESP32 devices via MQTT and serves the frontend through REST API + WebSockets.
+It provides REST API endpoints, MQTT real-time processing, database storage, authentication, device management, and full Swagger documentation.
+
+This backend communicates with ESP32 devices via MQTT and serves the frontend through REST API.
 
 ---
 
 ## ✨ Features
 
 - Real-time IoT device monitoring (MQTT)
-- ESP32 sensor data (temperature, humidity, motion, relay, etc.)
+- ESP32 sensor data (temperature, humidity, motion, relay, etc.) from MQTT topics
 - Full CRUD for Homes, Rooms, Devices
 - JWT authentication
 - MongoDB + Mongoose models
 - REST API with validation
-- WebSockets for live updates (Future)
 - Swagger API documentation
 - Clean modular file structure
 
@@ -23,82 +24,82 @@ This backend communicates with ESP32 devices via MQTT and serves the frontend th
 ## 🗂 Project Structure
 
 ```
-server/
- ├── config/
- ├── controllers/
- ├── middlewares/
- ├── models/
- ├── routes/
- ├── utils/
- ├── validators/
- ├── db.ts
- ├── seed.ts
- ├── server.ts
- └── swagger.config.ts
+backend/
+  └── src/
+      ├── config/
+      ├── controllers/
+      ├── middlewares/
+      ├── models/
+      ├── routes/
+      ├── utils/
+      ├── validators/
+      ├── db.ts
+      ├── seed.ts
+      ├── server.ts
+      └── swagger.config.ts
 ```
 
 Each folder is responsible for a clean separation of business logic:
-- **controllers** – API logic  
-- **routes** – endpoints  
-- **models** – Mongoose schemas  
-- **middlewares** – validation/auth  
-- **validators** – request validation  
-- **utils** – helpers  
-- **config** – server configuration  
+
+- **controllers** – API logic
+- **routes** – endpoints
+- **models** – Mongoose schemas
+- **middlewares** – validation/auth
+- **validators** – request validation
+- **utils** – helpers
+- **config** – server configuration
 
 ---
 
-## 📌 Application Architecture Overview
+## 📌 User Flow
 
-### 1. User Flow
 After authentication, each user can:
+
 - Create/manage **Homes**
 - Create/manage **Rooms**
 - Add devices to any room
 - View real-time device data
-- Access WebSocket-powered live updates
 
 ---
 
-### 2. Homes
+### Homes
+
 Users may create **any number of homes**.
 
 Home actions:
+
 - ➕ Add Home
-- ❌ Delete Home  
-Each home contains multiple rooms.
+- ❌ Delete Home
+  Each home contains multiple rooms.
 
 ---
 
-### 3. Rooms
-A room belongs to a home.  
+### Rooms
+
+A room belongs to a home.
 Users can create **unlimited rooms**.
 
 Room actions:
-- ➕ Add Room  
-- Upload 3D *splat file*  
-- ❌ Delete Room  
+
+- ➕ Add Room
+- Upload 3D _splat file_
+- ❌ Delete Room
 
 Rooms act as containers for devices and 3D positioning.
 
 ---
 
-### 4. Devices
+### Devices
+
 Devices are assigned directly to rooms.
 
-Supported types:
-- Temperature sensor  
-- Humidity sensor  
-- Motion sensor  
-- Smart plug / relay  
-- Any custom MQTT-based sensor  
-
 Each device includes:
-- Name  
-- Type  
-- Assigned room  
-- Online/offline state  
-- Live MQTT data  
+
+- Name
+- Type
+- Assigned room
+- Online/offline state
+- Live MQTT data
 
 ---
 
@@ -106,66 +107,90 @@ Each device includes:
 
 HomePulse uses **MQTT as the real-time backbone**.
 
-### Data flow:
-1. ESP32 publishes messages → MQTT topic  
-2. Backend subscribes and listens  
-3. Data saved to MongoDB  
-4. WebSocket pushes updates to frontend  
-5. Frontend renders updated values instantly  
+### Device lifecycle
 
-Supports:
-- Temperature / humidity updates  
-- Motion events  
-- Relay control  
-- Device online/offline tracking  
+- Device connects to MQTT
+- Publishes sensor data
+- Backend receives it via MQTT client
+- Backend updates MongoDB + broadcasts to frontend
+
+### Data flow:
+
+IoT Device → MQTT Broker → Backend → MongoDB → Frontend (3D view)
 
 ---
 
 ## 🔐 Authentication
 
-- User registration  
-- Login  
-- JWT token system  
-- All user resources connected via userId  
+- Login
+- Registration
+- Protected routes
+- JWT stored securely
 
 ---
 
 ## 🛠 Tech Stack (Backend)
-- Node.js  
-- Express  
-- MongoDB + Mongoose  
-- MQTT (Mosquitto / EMQX)  
-- JWT  
-- Swagger  
-- WebSockets  
+
+- Node.js
+- Express
+- MongoDB + Mongoose
+- MQTT (Mosquitto / EMQX)
+- JWT
+- Swagger
 
 Extra:
-- MongoDB (local or cloud)  
-- MQTT broker  
+
+- MongoDB (local or cloud)
+- MQTT broker
 
 ---
 
 ## 💻 Installation & Setup
 
-### 1. Clone
+### 🧬 Clone repo
+
 ```bash
-git clone <repo-url>
-cd HomePulse
+git clone https://github.com/Home-Pulse-App/backend.git
+cd backend
 ```
 
-### 2. Backend setup
+### 🧱 Backend setup
+
 ```bash
-cd server
 npm install
 npm run dev
 ```
 
-Environment variables:
+### 🧩 Environment variables
+
+Your `.env` file must include:
+
 ```
-MONGO_URI=
-JWT_SECRET=
-MQTT_URL=
+PORT=3000
+MONGO_URI=mongodb://localhost:27017/homepulse
+MQTT_BROKER_URL=mqtt://localhost:1883
+MQTT_USERNAME=
+MQTT_PASSWORD=
+JWT_SECRET=your-secret-key
+JWT_EXPIRES_IN=7d
 ```
+
+### 🍃 MongoDB setup
+
+The backend uses **Mongoose** to handle:
+
+- Users
+- Houses
+- Rooms
+- Devices
+- Sensor readings (optional depending on your model)
+
+### 📡 MQTT setup
+
+The backend connects to the broker defined in `.env` and subscribes to:
+
+homepulse/{deviceId}/data
+homepulse/{deviceId}/status
 
 ---
 
@@ -174,6 +199,7 @@ MQTT_URL=
 The backend provides full Swagger documentation describing all API endpoints:
 
 **What’s included:**
+
 - Full endpoint list
 - Request/response schemas
 - Validation rules
@@ -184,10 +210,36 @@ The backend provides full Swagger documentation describing all API endpoints:
 **Access Swagger UI:**
 `/api/docs`
 
+Full list 🔗 : `http://localhost:3000/api-docs`
+
 You can test APIs directly in the browser, explore descriptions, and validate integrations.
+
+---
+
+## 🧪 Testing
+
+```bash
+npm run test
+```
+
+### Unit tests use:
+
+- Jest or Vitest
+- Supertest for API routes
+
+---
+
+## 🚀 Deployment
+
+### You can deploy via:
+
+- Docker (recommended)
+- PM2 + Node
+- Railway / Render / Fly.io
+- Raspberry Pi (local server)
 
 ---
 
 ## 📄 License
 
-Private project – internal development only.
+Private project, internal development only.
