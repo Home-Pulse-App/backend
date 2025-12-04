@@ -1,4 +1,3 @@
-```md
 # 🏠 HomePulse – Backend (API + MQTT + DB)
 
 HomePulse Backend is the core of the smart-home platform, providing REST API endpoints, MQTT real-time processing, WebSocket updates, database storage, authentication, device management, and full Swagger documentation.
@@ -23,7 +22,7 @@ This backend communicates with ESP32 devices via MQTT and serves the frontend th
 
 ## 🗂 Project Structure
 
-
+```
 server/
  ├── config/
  ├── controllers/
@@ -36,6 +35,7 @@ server/
  ├── seed.ts
  ├── server.ts
  └── swagger.config.ts
+```
 
 Each folder is responsible for a clean separation of business logic:
 - **controllers** – API logic  
@@ -151,43 +151,43 @@ Extra:
 ```bash
 git clone <repo-url>
 cd HomePulse
+```
 
-2. Backend setup
+### 2. Backend setup
+```bash
 cd server
 npm install
 npm run dev
+```
 
 Environment variables:
+```
 MONGO_URI=
 JWT_SECRET=
 MQTT_URL=
+```
 
+---
 
-📘 API Documentation (Swagger)
+## 📘 API Documentation (Swagger)
+
 The backend provides full Swagger documentation describing all API endpoints:
-What’s included:
-Full endpoint list
 
+**What’s included:**
+- Full endpoint list
+- Request/response schemas
+- Validation rules
+- JWT authentication documentation
+- Error codes
+- Example inputs/outputs
 
-Request/response schemas
-
-
-Validation rules
-
-
-JWT authentication documentation
-
-
-Error codes
-
-
-Example inputs/outputs
-
-
-Access Swagger UI:
-/api/docs
+**Access Swagger UI:**
+`/api/docs`
 
 You can test APIs directly in the browser, explore descriptions, and validate integrations.
 
-📄 License
+---
+
+## 📄 License
+
 Private project – internal development only.
