@@ -1,78 +1,152 @@
 # Home Pulse Server
 
-A robust backend server for the Home Pulse application, built with Express.js, TypeScript, and MongoDB.
+The Home-Pulse backend is responsible for:
+- Managing users, houses, rooms, and IoT devices
+- Receiving real-time sensor data from MQTT topics
+- Storing device data in MongoDB via Mongoose
+- Exposing a secure REST API for the frontend
+- Serving WebSocket/MQTT-driven updates
 
-## 🚀 Getting Started
+---
 
-### Installation
+## 🚀 Overview
 
-1. Clone the repository in GitHub
-2. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-3. Install required dependencies:
-   ```bash
-   npm install
-   ```
+This service acts as the bridge between your IoT devices and the Home-Pulse frontend.
 
-### Configuration
+**Flow:**
 
-Create a `.env` file in the root directory with the following variables:
+IoT Device → MQTT Broker → Backend → MongoDB → Frontend (3D view)
 
-```env
-# Database Connection (Required)
+---
+
+## 📂 Project Structure
+
+backend/
+├── src/
+│ ├── controllers/
+│ ├── middleware/
+│ ├── models/
+│ ├── routes/
+│ ├── utils/
+│ ├── app.ts
+│ └── server.ts
+├── tests/
+├── .env.example
+└── package.json
+
+---
+
+## ⚙️ Requirements
+
+- **Node.js 18+**
+- **MongoDB** (local or cloud)
+- **MQTT Broker** (Mosquitto, EMQX, or hosted)
+- **npm** or **yarn**
+
+---
+## 🧩 Environment Variables
+
+Your `.env` file must include:
+
+PORT=3000
+
+'#'Mongo
+
 MONGO_URI=mongodb://localhost:27017/homepulse
 
-# Authentication (Required)
-JWT_SECRET=your_super_secret_jwt_key
+'#' MQTT Broker
 
-# MQTT Configuration 
-MQTT_URL=mqtt://4.tcp.eu.ngrok.io:17511
-```
+MQTT_BROKER_URL=mqtt://localhost:1883
+MQTT_USERNAME=
+MQTT_PASSWORD=
 
-### Running the Server
+JWT
+
+JWT_SECRET=your-secret-key
+JWT_EXPIRES_IN=7d
+---
+
+## 🧱 MongoDB Setup
+
+The backend uses **Mongoose** to handle:
+
+- Users
+- Houses
+- Rooms
+- Devices
+- Sensor readings (optional depending on your model)
+
+---
+
+## 📡 MQTT Setup
+
+The backend connects to the broker defined in `.env` and subscribes to:
+
+homepulse/{deviceId}/data
+homepulse/{deviceId}/status
+
+---
+
+## ▶️ Running the Backend
 
 ```bash
+npm install
 npm run dev
+
 ```
-Runs the server with reloading on port 3000.
 
+### The backend exposes:
 
-## 🔌 Connecting to the Server
+http://localhost:3000/api — REST API
 
-### Base URL
-The server runs on port **3000** by default.
-- **Base API URL:** `http://localhost:3000/api`
+http://localhost:3000/api-docs — Swagger UI
 
-### API Documentation
-Interactive Swagger documentation is available at:
-- **URL:** `http://localhost:3000/api-docs`
+## 🔐 Authentication
 
-### Key Endpoints
+Authentication is handled with JWT.
 
-| Resource | Method | Endpoint | Description |
-|----------|--------|----------|-------------|
-| **Auth** | POST | `/api/auth/login` | Login to get JWT token |
-| **Users** | POST | `/api/users` | Register a new user |
-| **Homes** | GET | `/api/homes` | Get user's homes |
-| **Devices** | GET | `/api/devices` | Get user's devices |
-| **Data** | GET | `/api/device-data/:device` | Get sensor data |
+### Flow:
 
-### Authentication
-Most endpoints require a Token: 
-- You can generate it through registering & logging in via the Swagger Documentation.
-```
-"token": <your_jwt_token>
-```
+- Create user
+- Login → receive JWT
+- Attach token in Authorization: Bearer <token>
+- Access protected routes
+
+## 📚 API Documentation
+
+### API endpoints include:
+
+/auth → create user, login, refresh
+/houses → CRUD
+/rooms → CRUD
+/devices → CRUD + assign to rooms
+/sensor → real-time device updates
+
+Full list is in: http://localhost:3000/api-docs
+
+## 🔌 Device Lifecycle
+
+- Device connects to MQTT
+- Publishes sensor data
+- Backend receives it via MQTT client
+- Backend updates MongoDB + broadcasts to frontend
 
 ## 🧪 Testing
 
-Run the test suite:
 ```bash
-npm test
+npm run test
 ```
-Run integration tests:
-```bash
-npx vitest test/integration/<filename>
-```
+
+### Unit tests use:
+
+- Jest or Vitest
+- Supertest for API routes
+
+## 🚀 Deployment
+
+### You can deploy via:
+
+- Docker (recommended)
+- PM2 + Node
+- Railway / Render / Fly.io
+- Raspberry Pi (local server)
