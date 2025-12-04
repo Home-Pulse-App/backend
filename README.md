@@ -1,193 +1,152 @@
-```md
-# 🏠 HomePulse – Backend (API + MQTT + DB)
+# Home Pulse Server
 
-HomePulse Backend is the core of the smart-home platform, providing REST API endpoints, MQTT real-time processing, WebSocket updates, database storage, authentication, device management, and full Swagger documentation.
-
-This backend communicates with ESP32 devices via MQTT and serves the frontend through REST API + WebSockets.
-
----
-
-## ✨ Features
-
-- Real-time IoT device monitoring (MQTT)
-- ESP32 sensor data (temperature, humidity, motion, relay, etc.)
-- Full CRUD for Homes, Rooms, Devices
-- JWT authentication
-- MongoDB + Mongoose models
-- REST API with validation
-- WebSockets for live updates (Future)
-- Swagger API documentation
-- Clean modular file structure
+The Home-Pulse backend is responsible for:
+- Managing users, houses, rooms, and IoT devices
+- Receiving real-time sensor data from MQTT topics
+- Storing device data in MongoDB via Mongoose
+- Exposing a secure REST API for the frontend
+- Serving WebSocket/MQTT-driven updates
 
 ---
 
-## 🗂 Project Structure
+## 🚀 Overview
 
+This service acts as the bridge between your IoT devices and the Home-Pulse frontend.
 
-server/
- ├── config/
- ├── controllers/
- ├── middlewares/
- ├── models/
- ├── routes/
- ├── utils/
- ├── validators/
- ├── db.ts
- ├── seed.ts
- ├── server.ts
- └── swagger.config.ts
+**Flow:**
 
-Each folder is responsible for a clean separation of business logic:
-- **controllers** – API logic  
-- **routes** – endpoints  
-- **models** – Mongoose schemas  
-- **middlewares** – validation/auth  
-- **validators** – request validation  
-- **utils** – helpers  
-- **config** – server configuration  
+IoT Device → MQTT Broker → Backend → MongoDB → Frontend (3D view)
 
 ---
 
-## 📌 Application Architecture Overview
+## 📂 Project Structure
+ ```
+backend/
+├── src/
+│ ├── controllers/
+│ ├── middleware/
+│ ├── models/
+│ ├── routes/
+│ ├── utils/
+│ ├── app.ts
+│ └── server.ts
+├── tests/
+├── .env.example
+└── package.json
+```
+---
 
-### 1. User Flow
-After authentication, each user can:
-- Create/manage **Homes**
-- Create/manage **Rooms**
-- Add devices to any room
-- View real-time device data
-- Access WebSocket-powered live updates
+## ⚙️ Requirements
+
+- **Node.js 18+**
+- **MongoDB** (local or cloud)
+- **MQTT Broker** (Mosquitto, EMQX, or hosted)
+- **npm** or **yarn**
+
+---
+## 🧩 Environment Variables
+
+Your `.env` file must include:
+
+PORT=3000
+
+'#'Mongo
+
+MONGO_URI=mongodb://localhost:27017/homepulse
+
+'#' MQTT Broker
+
+MQTT_BROKER_URL=mqtt://localhost:1883
+MQTT_USERNAME=
+MQTT_PASSWORD=
+
+JWT
+
+JWT_SECRET=your-secret-key
+JWT_EXPIRES_IN=7d
+---
+
+## 🧱 MongoDB Setup
+
+The backend uses **Mongoose** to handle:
+
+- Users
+- Houses
+- Rooms
+- Devices
+- Sensor readings (optional depending on your model)
 
 ---
 
-### 2. Homes
-Users may create **any number of homes**.
+## 📡 MQTT Setup
 
-Home actions:
-- ➕ Add Home
-- ❌ Delete Home  
-Each home contains multiple rooms.
+The backend connects to the broker defined in `.env` and subscribes to:
 
----
-
-### 3. Rooms
-A room belongs to a home.  
-Users can create **unlimited rooms**.
-
-Room actions:
-- ➕ Add Room  
-- Upload 3D *splat file*  
-- ❌ Delete Room  
-
-Rooms act as containers for devices and 3D positioning.
+homepulse/{deviceId}/data
+homepulse/{deviceId}/status
 
 ---
 
-### 4. Devices
-Devices are assigned directly to rooms.
+## ▶️ Running the Backend
 
-Supported types:
-- Temperature sensor  
-- Humidity sensor  
-- Motion sensor  
-- Smart plug / relay  
-- Any custom MQTT-based sensor  
-
-Each device includes:
-- Name  
-- Type  
-- Assigned room  
-- Online/offline state  
-- Live MQTT data  
-
----
-
-## 🔌 MQTT Communication
-
-HomePulse uses **MQTT as the real-time backbone**.
-
-### Data flow:
-1. ESP32 publishes messages → MQTT topic  
-2. Backend subscribes and listens  
-3. Data saved to MongoDB  
-4. WebSocket pushes updates to frontend  
-5. Frontend renders updated values instantly  
-
-Supports:
-- Temperature / humidity updates  
-- Motion events  
-- Relay control  
-- Device online/offline tracking  
-
----
-
-## 🔐 Authentication
-
-- User registration  
-- Login  
-- JWT token system  
-- All user resources connected via userId  
-
----
-
-## 🛠 Tech Stack (Backend)
-- Node.js  
-- Express  
-- MongoDB + Mongoose  
-- MQTT (Mosquitto / EMQX)  
-- JWT  
-- Swagger  
-- WebSockets  
-
-Extra:
-- MongoDB (local or cloud)  
-- MQTT broker  
-
----
-
-## 💻 Installation & Setup
-
-### 1. Clone
 ```bash
-git clone <repo-url>
-cd HomePulse
-
-2. Backend setup
-cd server
 npm install
 npm run dev
 
-Environment variables:
-MONGO_URI=
-JWT_SECRET=
-MQTT_URL=
+```
 
+### The backend exposes:
 
-📘 API Documentation (Swagger)
-The backend provides full Swagger documentation describing all API endpoints:
-What’s included:
-Full endpoint list
+http://localhost:3000/api — REST API
 
+http://localhost:3000/api-docs — Swagger UI
 
-Request/response schemas
+## 🔐 Authentication
 
+Authentication is handled with JWT.
 
-Validation rules
+### Flow:
 
+- Create user
+- Login → receive JWT
+- Attach token in Authorization: Bearer <token>
+- Access protected routes
 
-JWT authentication documentation
+## 📚 API Documentation
 
+### API endpoints include:
 
-Error codes
+/auth → create user, login, refresh
+/houses → CRUD
+/rooms → CRUD
+/devices → CRUD + assign to rooms
+/sensor → real-time device updates
 
+Full list is in: http://localhost:3000/api-docs
 
-Example inputs/outputs
+## 🔌 Device Lifecycle
 
+- Device connects to MQTT
+- Publishes sensor data
+- Backend receives it via MQTT client
+- Backend updates MongoDB + broadcasts to frontend
 
-Access Swagger UI:
-/api/docs
+## 🧪 Testing
 
-You can test APIs directly in the browser, explore descriptions, and validate integrations.
+```bash
+npm run test
+```
 
-📄 License
-Private project – internal development only.
+### Unit tests use:
+
+- Jest or Vitest
+- Supertest for API routes
+
+## 🚀 Deployment
+
+### You can deploy via:
+
+- Docker (recommended)
+- PM2 + Node
+- Railway / Render / Fly.io
+- Raspberry Pi (local server)
