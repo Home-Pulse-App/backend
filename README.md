@@ -1,152 +1,193 @@
-# Home Pulse Server
+```md
+# 🏠 HomePulse – Backend (API + MQTT + DB)
 
-The Home-Pulse backend is responsible for:
-- Managing users, houses, rooms, and IoT devices
-- Receiving real-time sensor data from MQTT topics
-- Storing device data in MongoDB via Mongoose
-- Exposing a secure REST API for the frontend
-- Serving WebSocket/MQTT-driven updates
+HomePulse Backend is the core of the smart-home platform, providing REST API endpoints, MQTT real-time processing, WebSocket updates, database storage, authentication, device management, and full Swagger documentation.
+
+This backend communicates with ESP32 devices via MQTT and serves the frontend through REST API + WebSockets.
 
 ---
 
-## 🚀 Overview
+## ✨ Features
 
-This service acts as the bridge between your IoT devices and the Home-Pulse frontend.
-
-**Flow:**
-
-IoT Device → MQTT Broker → Backend → MongoDB → Frontend (3D view)
-
----
-
-## 📂 Project Structure
-
-backend/
-├── src/
-│ ├── controllers/
-│ ├── middleware/
-│ ├── models/
-│ ├── routes/
-│ ├── utils/
-│ ├── app.ts
-│ └── server.ts
-├── tests/
-├── .env.example
-└── package.json
+- Real-time IoT device monitoring (MQTT)
+- ESP32 sensor data (temperature, humidity, motion, relay, etc.)
+- Full CRUD for Homes, Rooms, Devices
+- JWT authentication
+- MongoDB + Mongoose models
+- REST API with validation
+- WebSockets for live updates (Future)
+- Swagger API documentation
+- Clean modular file structure
 
 ---
 
-## ⚙️ Requirements
+## 🗂 Project Structure
 
-- **Node.js 18+**
-- **MongoDB** (local or cloud)
-- **MQTT Broker** (Mosquitto, EMQX, or hosted)
-- **npm** or **yarn**
 
----
-## 🧩 Environment Variables
+server/
+ ├── config/
+ ├── controllers/
+ ├── middlewares/
+ ├── models/
+ ├── routes/
+ ├── utils/
+ ├── validators/
+ ├── db.ts
+ ├── seed.ts
+ ├── server.ts
+ └── swagger.config.ts
 
-Your `.env` file must include:
-
-PORT=3000
-
-'#'Mongo
-
-MONGO_URI=mongodb://localhost:27017/homepulse
-
-'#' MQTT Broker
-
-MQTT_BROKER_URL=mqtt://localhost:1883
-MQTT_USERNAME=
-MQTT_PASSWORD=
-
-JWT
-
-JWT_SECRET=your-secret-key
-JWT_EXPIRES_IN=7d
----
-
-## 🧱 MongoDB Setup
-
-The backend uses **Mongoose** to handle:
-
-- Users
-- Houses
-- Rooms
-- Devices
-- Sensor readings (optional depending on your model)
+Each folder is responsible for a clean separation of business logic:
+- **controllers** – API logic  
+- **routes** – endpoints  
+- **models** – Mongoose schemas  
+- **middlewares** – validation/auth  
+- **validators** – request validation  
+- **utils** – helpers  
+- **config** – server configuration  
 
 ---
 
-## 📡 MQTT Setup
+## 📌 Application Architecture Overview
 
-The backend connects to the broker defined in `.env` and subscribes to:
-
-homepulse/{deviceId}/data
-homepulse/{deviceId}/status
+### 1. User Flow
+After authentication, each user can:
+- Create/manage **Homes**
+- Create/manage **Rooms**
+- Add devices to any room
+- View real-time device data
+- Access WebSocket-powered live updates
 
 ---
 
-## ▶️ Running the Backend
+### 2. Homes
+Users may create **any number of homes**.
 
-```bash
-npm install
-npm run dev
+Home actions:
+- ➕ Add Home
+- ❌ Delete Home  
+Each home contains multiple rooms.
 
-```
+---
 
-### The backend exposes:
+### 3. Rooms
+A room belongs to a home.  
+Users can create **unlimited rooms**.
 
-http://localhost:3000/api — REST API
+Room actions:
+- ➕ Add Room  
+- Upload 3D *splat file*  
+- ❌ Delete Room  
 
-http://localhost:3000/api-docs — Swagger UI
+Rooms act as containers for devices and 3D positioning.
+
+---
+
+### 4. Devices
+Devices are assigned directly to rooms.
+
+Supported types:
+- Temperature sensor  
+- Humidity sensor  
+- Motion sensor  
+- Smart plug / relay  
+- Any custom MQTT-based sensor  
+
+Each device includes:
+- Name  
+- Type  
+- Assigned room  
+- Online/offline state  
+- Live MQTT data  
+
+---
+
+## 🔌 MQTT Communication
+
+HomePulse uses **MQTT as the real-time backbone**.
+
+### Data flow:
+1. ESP32 publishes messages → MQTT topic  
+2. Backend subscribes and listens  
+3. Data saved to MongoDB  
+4. WebSocket pushes updates to frontend  
+5. Frontend renders updated values instantly  
+
+Supports:
+- Temperature / humidity updates  
+- Motion events  
+- Relay control  
+- Device online/offline tracking  
+
+---
 
 ## 🔐 Authentication
 
-Authentication is handled with JWT.
+- User registration  
+- Login  
+- JWT token system  
+- All user resources connected via userId  
 
-### Flow:
+---
 
-- Create user
-- Login → receive JWT
-- Attach token in Authorization: Bearer <token>
-- Access protected routes
+## 🛠 Tech Stack (Backend)
+- Node.js  
+- Express  
+- MongoDB + Mongoose  
+- MQTT (Mosquitto / EMQX)  
+- JWT  
+- Swagger  
+- WebSockets  
 
-## 📚 API Documentation
+Extra:
+- MongoDB (local or cloud)  
+- MQTT broker  
 
-### API endpoints include:
+---
 
-/auth → create user, login, refresh
-/houses → CRUD
-/rooms → CRUD
-/devices → CRUD + assign to rooms
-/sensor → real-time device updates
+## 💻 Installation & Setup
 
-Full list is in: http://localhost:3000/api-docs
-
-## 🔌 Device Lifecycle
-
-- Device connects to MQTT
-- Publishes sensor data
-- Backend receives it via MQTT client
-- Backend updates MongoDB + broadcasts to frontend
-
-## 🧪 Testing
-
+### 1. Clone
 ```bash
-npm run test
-```
+git clone <repo-url>
+cd HomePulse
 
-### Unit tests use:
+2. Backend setup
+cd server
+npm install
+npm run dev
 
-- Jest or Vitest
-- Supertest for API routes
+Environment variables:
+MONGO_URI=
+JWT_SECRET=
+MQTT_URL=
 
-## 🚀 Deployment
 
-### You can deploy via:
+📘 API Documentation (Swagger)
+The backend provides full Swagger documentation describing all API endpoints:
+What’s included:
+Full endpoint list
 
-- Docker (recommended)
-- PM2 + Node
-- Railway / Render / Fly.io
-- Raspberry Pi (local server)
+
+Request/response schemas
+
+
+Validation rules
+
+
+JWT authentication documentation
+
+
+Error codes
+
+
+Example inputs/outputs
+
+
+Access Swagger UI:
+/api/docs
+
+You can test APIs directly in the browser, explore descriptions, and validate integrations.
+
+📄 License
+Private project – internal development only.
