@@ -1,0 +1,25 @@
+[{
+  "_id": {
+    "$oid": "69273a364010034e0667cb46"
+  },
+  "userName": "Demo User",
+  "email": "user@email.com",
+  "passwordHash": "$2b$14$P5IqrFtcMwmpydhZ30g3z.9ec/6kjb40nMBbkdsZAC31NvPNyp69e",
+  "homes": [
+    {
+      "$oid": "69302b76a43d16cb8b25f98c"
+    }
+  ],
+  "devices": [
+    {
+      "$oid": "69273a6b4010034e0667cb4f"
+    }
+  ],
+  "createdAt": {
+    "$date": "2025-11-26T17:34:46.156Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-03T15:14:27.251Z"
+  },
+  "__v": 4
+}]

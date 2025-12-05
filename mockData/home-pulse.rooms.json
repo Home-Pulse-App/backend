@@ -1,0 +1,134 @@
+[{
+  "_id": {
+    "$oid": "69312ede08f1b8f9d3091f45"
+  },
+  "roomName": "Kitchen",
+  "homeId": {
+    "$oid": "69302b76a43d16cb8b25f98c"
+  },
+  "devices": [
+    {
+      "$oid": "69273a6b4010034e0667cb4f"
+    }
+  ],
+  "viewDevices": [
+    {
+      "id": "4d258f49-8234-46ea-a82d-daf56ae52258",
+      "model": "Light",
+      "position": [
+        -0.6194653467884161,
+        0.38694724398392677,
+        -0.1275642664064639
+      ],
+      "rotation": [
+        0,
+        0,
+        -2.610423498215467
+      ],
+      "scale": 1,
+      "sensorData": {
+        "temperature": 17,
+        "humidity": 59,
+        "light": 70,
+        "switch1": 1,
+        "switch2": 0,
+        "button1": 0,
+        "button2": 0
+      },
+      "_id": {
+        "$oid": "69314b5008f1b8f9d30a1abb"
+      }
+    },
+    {
+      "id": "01c88bfa-1b57-400a-942d-2a6be75fd382",
+      "model": "Hygrometer",
+      "position": [
+        -0.9865835308056916,
+        -0.6424233559126662,
+        -1.0882010138408864
+      ],
+      "rotation": [
+        0,
+        0.5733102893938219,
+        0
+      ],
+      "scale": 1,
+      "sensorData": {
+        "temperature": 17,
+        "humidity": 59,
+        "light": 70,
+        "switch1": 1,
+        "switch2": 0,
+        "button1": 0,
+        "button2": 0
+      },
+      "_id": {
+        "$oid": "69314b5008f1b8f9d30a1abc"
+      }
+    },
+    {
+      "id": "afdedae9-d21d-4718-baaa-4be6fc9bf449",
+      "model": "Thermometer",
+      "position": [
+        0.5074012883420169,
+        -0.5538605728668196,
+        -1.5126893211893269
+      ],
+      "rotation": [
+        0,
+        -0.38988491181276397,
+        0
+      ],
+      "scale": 1,
+      "sensorData": {
+        "temperature": 17,
+        "humidity": 59,
+        "light": 70,
+        "switch1": 1,
+        "switch2": 0,
+        "button1": 0,
+        "button2": 0
+      },
+      "_id": {
+        "$oid": "69314b5008f1b8f9d30a1abd"
+      }
+    },
+    {
+      "id": "77857799-94c8-4b6b-8a24-eda86841bb61",
+      "model": "AmbientLightSensor",
+      "position": [
+        0.004145510358255999,
+        -0.7650131818574241,
+        -1.0513389670195608
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "scale": 1,
+      "sensorData": {
+        "temperature": 17,
+        "humidity": 59,
+        "light": 70,
+        "switch1": 1,
+        "switch2": 0,
+        "button1": 0,
+        "button2": 0
+      },
+      "_id": {
+        "$oid": "69314b5008f1b8f9d30a1abe"
+      }
+    }
+  ],
+  "viewSplatFileId": {
+    "$oid": "693303546ba5ea7149096a15"
+  },
+  "createdAt": {
+    "$date": "2025-12-04T06:49:02.487Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-05T16:08:33.388Z"
+  },
+  "__v": 1
+}]

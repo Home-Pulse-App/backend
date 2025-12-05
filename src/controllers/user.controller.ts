@@ -101,10 +101,11 @@ export async function updateUser(req: Request, res: Response) {
   }
 
   try {
-    const userId = res.locals.userId.id;
+    const userId = res.locals.userId;
+    console.log(userId);
     const { userName, email, password } = req.body;
 
-    const user = await User.findById({ _id: userId._id });
+    const user = await User.findById({ userId });
 
     if (!user) {
       return res.status(404).json({

@@ -1,0 +1,17 @@
+[{
+  "_id": {
+    "$oid": "693303546ba5ea7149096a15"
+  },
+  "length": 48235190,
+  "chunkSize": 261120,
+  "uploadDate": {
+    "$date": "2025-12-05T16:07:48.364Z"
+  },
+  "filename": "splat_69312ede08f1b8f9d3091f45_1764950868080.splat",
+  "metadata": {
+    "roomId": "69312ede08f1b8f9d3091f45",
+    "uploadedAt": {
+      "$date": "2025-12-05T16:07:48.080Z"
+    }
+  }
+}]

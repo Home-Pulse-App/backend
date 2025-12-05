@@ -1,72 +1,189 @@
-# Home Pulse Server
+# 🏠 HomePulse Backend (API + MQTT + DB)
 
-The Home-Pulse backend is responsible for:
-- Managing users, houses, rooms, and IoT devices
-- Receiving real-time sensor data from MQTT topics
-- Storing device data in MongoDB via Mongoose
-- Exposing a secure REST API for the frontend
-- Serving WebSocket/MQTT-driven updates
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D16-green)](#)  <!-- ajusta la versión -->
+[![TypeScript](https://img.shields.io/badge/typescript-4.x-blue)](#)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/Home-Pulse-App/backend/ci.yml?branch=main)](https://github.com/Home-Pulse-App/backend/actions)  <!-- si usáis GitHub Actions -->
+[![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-green)](#)
+[![MongoDB](https://img.shields.io/badge/mongodb-%3E%3D4.0-green)](#)
+[![MQTT](https://img.shields.io/badge/mqtt-supported-blue)](#)
+
+HomePulse Backend is the core of the smart-home platform.
+
+It provides REST API endpoints, MQTT real-time processing, database storage, authentication, device management, and full Swagger documentation.
+
+This backend communicates with ESP32 devices via MQTT and serves the frontend through REST API.
 
 ---
 
-## 🚀 Overview
+## ✨ Features
 
-This service acts as the bridge between your IoT devices and the Home-Pulse frontend.
+- Real-time IoT device monitoring (MQTT)
+- ESP32 sensor data (temperature, humidity, motion, relay, etc.) from MQTT topics
+- Full CRUD for Homes, Rooms, Devices
+- JWT authentication
+- MongoDB + Mongoose models
+- REST API with validation
+- Swagger API documentation
+- Clean modular file structure
 
-**Flow:**
+---
+
+## 🗂 Project Structure
+
+```
+backend/
+  └── src/
+      ├── config/
+      ├── controllers/
+      ├── middlewares/
+      ├── models/
+      ├── routes/
+      ├── utils/
+      ├── validators/
+      ├── db.ts
+      ├── seed.ts
+      ├── server.ts
+      └── swagger.config.ts
+```
+
+Each folder is responsible for a clean separation of business logic:
+
+- **controllers** – API logic
+- **routes** – endpoints
+- **models** – Mongoose schemas
+- **middlewares** – validation/auth
+- **validators** – request validation
+- **utils** – helpers
+- **config** – server configuration
+
+---
+
+## 📌 User Flow
+
+After authentication, each user can:
+
+- Create/manage **Homes**
+- Create/manage **Rooms**
+- Add devices to any room
+- View real-time device data
+
+---
+
+### Homes
+
+Users may create **any number of homes**.
+
+Home actions:
+
+- ➕ Add Home
+- ❌ Delete Home
+  Each home contains multiple rooms.
+
+---
+
+### Rooms
+
+A room belongs to a home.
+Users can create **unlimited rooms**.
+
+Room actions:
+
+- ➕ Add Room
+- Upload 3D _splat file_
+- ❌ Delete Room
+
+Rooms act as containers for devices and 3D positioning.
+
+---
+
+### Devices
+
+Devices are assigned directly to rooms.
+
+Each device includes:
+
+- Name
+- Type
+- Assigned room
+- Online/offline state
+- Live MQTT data
+
+---
+
+## 🔌 MQTT Communication
+
+HomePulse uses **MQTT as the real-time backbone**.
+
+### Device lifecycle
+
+- Device connects to MQTT
+- Publishes sensor data
+- Backend receives it via MQTT client
+- Backend updates MongoDB + broadcasts to frontend
+
+### Data flow:
 
 IoT Device → MQTT Broker → Backend → MongoDB → Frontend (3D view)
 
 ---
 
-## 📂 Project Structure
- ```
-backend/
-├── src/
-│ ├── controllers/
-│ ├── middleware/
-│ ├── models/
-│ ├── routes/
-│ ├── utils/
-│ ├── app.ts
-│ └── server.ts
-├── tests/
-├── .env.example
-└── package.json
+## 🔐 Authentication
+
+- Login
+- Registration
+- Protected routes
+- JWT stored securely
+
+---
+
+## 🛠 Tech Stack (Backend)
+
+- Node.js
+- Express
+- MongoDB + Mongoose
+- MQTT (Mosquitto / EMQX)
+- JWT
+- Swagger
+
+Extra:
+
+- MongoDB (local or cloud)
+- MQTT broker
+
+---
+
+## 💻 Installation & Setup
+
+### 🧬 Clone repo
+
+```bash
+git clone https://github.com/Home-Pulse-App/backend.git
+cd backend
 ```
----
 
-## ⚙️ Requirements
+### 🧱 Backend setup
 
-- **Node.js 18+**
-- **MongoDB** (local or cloud)
-- **MQTT Broker** (Mosquitto, EMQX, or hosted)
-- **npm** or **yarn**
+```bash
+npm install
+npm run dev
+```
 
----
-## 🧩 Environment Variables
+### 🧩 Environment variables
 
 Your `.env` file must include:
 
+```
 PORT=3000
-
-'#'Mongo
-
 MONGO_URI=mongodb://localhost:27017/homepulse
-
-'#' MQTT Broker
-
 MQTT_BROKER_URL=mqtt://localhost:1883
 MQTT_USERNAME=
 MQTT_PASSWORD=
-
-JWT
-
 JWT_SECRET=your-secret-key
 JWT_EXPIRES_IN=7d
----
+```
 
-## 🧱 MongoDB Setup
+### 🍃 MongoDB setup
 
 The backend uses **Mongoose** to handle:
 
@@ -76,9 +193,7 @@ The backend uses **Mongoose** to handle:
 - Devices
 - Sensor readings (optional depending on your model)
 
----
-
-## 📡 MQTT Setup
+### 📡 MQTT setup
 
 The backend connects to the broker defined in `.env` and subscribes to:
 
@@ -87,49 +202,27 @@ homepulse/{deviceId}/status
 
 ---
 
-## ▶️ Running the Backend
+## 📘 API Documentation (Swagger)
 
-```bash
-npm install
-npm run dev
+The backend provides full Swagger documentation describing all API endpoints:
 
-```
+**What’s included:**
 
-### The backend exposes:
+- Full endpoint list
+- Request/response schemas
+- Validation rules
+- JWT authentication documentation
+- Error codes
+- Example inputs/outputs
 
-http://localhost:3000/api — REST API
+**Access Swagger UI:**
+`/api/docs`
 
-http://localhost:3000/api-docs — Swagger UI
+Full list 🔗 : `http://localhost:3000/api-docs`
 
-## 🔐 Authentication
+You can test APIs directly in the browser, explore descriptions, and validate integrations.
 
-Authentication is handled with JWT.
-
-### Flow:
-
-- Create user
-- Login → receive JWT
-- Attach token in Authorization: Bearer <token>
-- Access protected routes
-
-## 📚 API Documentation
-
-### API endpoints include:
-
-/auth → create user, login, refresh
-/houses → CRUD
-/rooms → CRUD
-/devices → CRUD + assign to rooms
-/sensor → real-time device updates
-
-Full list is in: http://localhost:3000/api-docs
-
-## 🔌 Device Lifecycle
-
-- Device connects to MQTT
-- Publishes sensor data
-- Backend receives it via MQTT client
-- Backend updates MongoDB + broadcasts to frontend
+---
 
 ## 🧪 Testing
 
@@ -141,6 +234,32 @@ npm run test
 
 - Jest or Vitest
 - Supertest for API routes
+
+---
+
+## 🧾 Seed
+
+The seed script populates the database with mock data.
+
+The mock data is stored in the `mockData` directory.
+
+The seed script will create:
+- 1 user
+- 1 house
+- 1 room
+- 1 splatFile
+- 1 device
+- 30050 sensor readings
+
+To login use the following credentials:
+
+email: user@email.com 
+password: Secret123!
+
+```bash
+npm run seed
+```
+---
 
 ## 🚀 Deployment
 

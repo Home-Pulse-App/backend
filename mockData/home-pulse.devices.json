@@ -1,0 +1,28 @@
+[{
+  "_id": {
+    "$oid": "69273a6b4010034e0667cb4f"
+  },
+  "deviceName": "iot1",
+  "type": "esp32-generic",
+  "state": "OFFLINE",
+  "sensors": [
+    "temperature",
+    "humidity",
+    "light",
+    "switch1",
+    "switch2"
+  ],
+  "createdAt": {
+    "$date": "2025-11-26T17:35:40.006Z"
+  },
+  "updatedAt": {
+    "$date": "2025-12-05T14:59:54.710Z"
+  },
+  "__v": 0,
+  "connectedToRoom": {
+    "$oid": "69312ede08f1b8f9d3091f45"
+  },
+  "userId": {
+    "$oid": "69273a364010034e0667cb46"
+  }
+}]
