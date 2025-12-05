@@ -4,7 +4,6 @@
 [![Node.js](https://img.shields.io/badge/node-%3E%3D16-green)](#)  <!-- ajusta la versión -->
 [![TypeScript](https://img.shields.io/badge/typescript-4.x-blue)](#)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/Home-Pulse-App/backend/ci.yml?branch=main)](https://github.com/Home-Pulse-App/backend/actions)  <!-- si usáis GitHub Actions -->
-[![Coverage Status](https://img.shields.io/badge/coverage-%%25-brightgreen)](#)  <!-- si generáis reporte de cobertura -->
 [![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-green)](#)
 [![MongoDB](https://img.shields.io/badge/mongodb-%3E%3D4.0-green)](#)
 [![MQTT](https://img.shields.io/badge/mqtt-supported-blue)](#)
